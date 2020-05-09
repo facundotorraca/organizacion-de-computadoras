@@ -1,18 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "vector.h"
 #include "merge_sort.h"
 
-#define ARGS 2
+#define ARGS_MAX 5
 #define ERROR -1
 #define SUCCESS 0
 #define DELIMITER " "
 
 
-const char* get_filename(int argc, const char* argv[]) {
-    if (argc != ARGS)
+const char* get_flag(int argc, const char* argv[]) {
+    if (argc > ARGS_MAX)
         return NULL;
     return argv[1];
 }
@@ -45,17 +46,75 @@ int read_vector(FILE* input_file, vector_t* vector) {
     return SUCCESS;
 }
 
+//TODO: Manejar archivos de entrada y salida y considerar el caso de guion
+//TODO: Funcion de print help y print version
+
 int main(int argc, const char* argv[]) {
-    const char* filename = get_filename(argc, argv);
-    if (!filename) {
-        fprintf(stderr, "Filename not specified\n");
+    const char* flag = get_flag(argc, argv);
+    if (!flag) {
+        fprintf(stderr, "Error: Too many args\n");
         return ERROR;
     }
 
-    FILE* input_file = fopen(filename, "r+");
-    if (!input_file) {
-        fprintf(stderr, "File not found\n");
-        return ERROR;
+    const char* input = NULL;
+    const char* output = NULL;
+
+    FILE* input_file = NULL;
+    FILE* output_file = NULL;
+    if (argc == 2){
+        if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0){
+            print_help();
+            return SUCCESS;
+        } else if(strcmp(argv[1], "-V") == 0 || strcmp(argv[1], "--version") == 0){
+            print_version();
+            return SUCCESS;
+        }
+    } else if (argc == 3) {
+        if (strcmp(argv[1], "-i") != 0 && strcmp(argv[1], "-o") != 0){
+            fprintf(stderr, "Error: Unknown flag, use -i or -o\n");
+            return ERROR;
+        }
+        if (strcmp(argv[1], "-i") != 0) {
+            input =argv[2];
+
+        } else if (strcmp(argv[1], "-o") != 0) {
+            output = argv[2];
+
+        }
+
+    } else if (argc == 5) {
+        bool mask_1 = (strcmp(argv[1], "-i") == 0 && strcmp(argv[3], "-o") == 0);
+        bool mask_2 = (strcmp(argv[1], "-o") == 0 && strcmp(argv[3], "-i") == 0);
+        if (!mask_1 && !mask_2) {
+            fprintf(stderr, "Error: Wrong use of flags, use -h to get ayuda\n");
+            return ERROR;
+        }
+        if (mask_1) {
+            input = argv[2];
+            output = argv[4];
+        } else if (mask_2) {
+            input = argv[4];
+            output = argv[2];
+        }
+
+    }
+
+    if (input) {
+        input_file = fopen(input, "r+");
+        if (!input_file) {
+            fprintf(stderr, "File not found\n");
+            return ERROR;
+        }
+    }
+    if (output) {
+        output_file = fopen(output, "w+");
+        if (!output_file) {
+            if(input_file) {
+                fclose(input_file);
+            }
+            fprintf(stderr, "File not found\n");
+            return ERROR;
+        }
     }
 
     vector_t vector;
@@ -78,6 +137,12 @@ int main(int argc, const char* argv[]) {
     }
 
     vector_destroy(&vector);
-    fclose(input_file);
+    if (input_file) {
+        fclose(input_file);
+    }
+    if (output_file) {
+        fclose(output_file);
+    }
+
     return SUCCESS;
 }
