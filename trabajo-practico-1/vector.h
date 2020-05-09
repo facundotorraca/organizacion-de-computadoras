@@ -34,6 +34,7 @@ void vector_clear(vector_t* self) {
 
 void vector_destroy(vector_t* self) {
     free(self->array);
+    self->max_size = INIT_SIZE;
     self->array = NULL;
     self->size = 0;
 }
