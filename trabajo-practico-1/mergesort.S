@@ -16,6 +16,9 @@ merge_sort:
 # wrapper that push
 # register into the stack
 
+addiu fp, 4, fp
+sw ra, fp
+
 subu t0, a1, 1           # calculate right index (t0 = size - 1)
 addiu fp, 4, fp          # increment frame pointer
 sw t0 , fp               # push rigth index to stack
@@ -27,6 +30,12 @@ addiu fp, 4, fp          # increment frame pointer
 sw a0, fp                # push a0 to stack
 
 jal merge_sort_rec       # jump to merge sort recursive
+
+#Popping return address
+lw t0, fp                # pop P in t1
+subu fp, fp, 4           # decrement frame pointer
+
+jal t0
 
 
 
@@ -62,6 +71,9 @@ addu t4, t4, t2           # t4 <-- t4 + L
 #t4 <-- L (R - L) / 2
 
 # second call with (Middle+1 - R) range
+addiu fp, 4, fp
+sw ra, fp
+
 addiu fp, 4, fp          # increment frame pointer
 sw t3 , fp               # push R (tr) to stack
 
@@ -73,6 +85,9 @@ addiu fp, 4, fp          # increment frame pointer
 sw t1 , fp               # push P (t1) to stack
 
 # first call with (L - Middle) range
+addiu fp, 4, fp
+sw ra, fp
+
 addiu fp, 4, fp          # increment frame pointer
 sw t4, fp                # push middle (t4) to stack
 
@@ -88,4 +103,10 @@ jal merge_sort_rec
 #aca va el merge
 
 END:
+lw t0, fp                # pop P in t1
+subu fp, fp, 4           # decrement frame pointer
+jal t0
+
+
+
 #aca va algo
