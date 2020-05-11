@@ -16,6 +16,8 @@ merge_sort:
 # wrapper that push
 # register into the stack
 
+#save s0 ... s3 in stack
+
 addiu fp, 4, fp
 sw ra, fp
 
@@ -39,7 +41,6 @@ jal t0
 
 
 
-
 # merge sort recursive that receives by stack
 # an array pointer (P), the left index (L)
 # and the right index (R). Sorts the array pointed by P
@@ -47,8 +48,6 @@ merge_sort_rec:
 # 1st stack element --> array pointer (P)    load in t1
 # 2nd stack element --> left index    (L)    load in t2
 # 3rd stack element --> right index   (R)    load in t3
-
-li t0, 4                 # t0 <-- 4
 
 lw t1, fp                # pop P in t1
 subu fp, fp, 4           # decrement frame pointer
@@ -100,7 +99,12 @@ sw t1 , fp               # push P (t1) to stack
 jal merge_sort_rec
 jal merge_sort_rec
 
-#aca va el merge
+# P -> ptr    ---> s0
+# L -> left   ---> s1
+# M ->medio   ---> s2
+# R -> right  ---> s3
+
+jal merge #MIRAR EL RA
 
 END:
 lw t0, fp                # pop P in t1
