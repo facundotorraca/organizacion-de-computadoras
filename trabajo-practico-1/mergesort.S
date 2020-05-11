@@ -1,85 +1,93 @@
 #include <sys/regdef.h>
+
 .text
 .align 2
 .globl merge_sort
 .ent merge_sort
 
+# wrapper to merge sort that receives array pointer
+# and array size by args registers and push to stack
+# array pointer, left index (0), and right index (size-1)
+# and then call the recursive function of merge sort
 merge_sort:
-.frame fp, 16, ra
-.set noreorder
-.cpload t9
-.set reorder
-subu sp, sp, 16
+# a0 --> array ptr
+# a1 --> array size
 
-#A0 ARRAY POINTER
-#A1 SIZE
+# wrapper that push
+# register into the stack
 
-addiu fp, 4, fp          # muevo el stack pointer
-sw a0, fp                # guardo lo que hay en A0 en el stack
+subu t0, a1, 1           # calculate right index (t0 = size - 1)
+addiu fp, 4, fp          # increment frame pointer
+sw t0 , fp               # push rigth index to stack
 
-addiu fp, 4, fp          # muevo el stack pointer
-sw zero , fp               # guardo 0 en el stack
-#--- verificar zero ----
+addiu fp, 4, fp          # increment frame pointer
+sw zero , fp             # push 0 to stack
 
-subu t0, a1, 1
+addiu fp, 4, fp          # increment frame pointer
+sw a0, fp                # push a0 to stack
 
-addiu fp, 4, fp          # muevo el stack pointer
-sw t0 , fp               # guardo lo que hay en t0 en el stack
-
-b merge_sort_rec
+jal merge_sort_rec       # jump to merge sort recursive
 
 
 
 
-
-
-
-
+# merge sort recursive that receives by stack
+# an array pointer (P), the left index (L)
+#and the right index (R). Sorts the array pointed by P
 merge_sort_rec:
+# 1st stack element --> array pointer (P)    load in t1
+# 2nd stack element --> left index    (L)    load in t2
+# 3rd stack element --> right index   (R)    load in t3
 
-#A0 ARRAY POINTER
-#A1 LEFT INDEX
-#A2 RIGHT INDEX
+li t0, 4                 # t0 <-- 4
 
-.frame fp, 16, ra
-.set noreorder
-.cpload t9
-.set reorder
-subu sp, sp, 16
+lw t1, fp                # pop P in t1
+subu fp, fp, 4           # decrement frame pointer
 
-ble a2, a1, END         # branch en menor o igual
+lw t2, fp                # pop L in t2
+subu fp, fp, 4           # decrement frame pointer
 
-addiu fp, 4, fp          # muevo el stack pointer
-sw a1, fp                # guardo lo que hay en A1 en el stack
+lw t3, fp                # pop R in t3
+subu fp, fp, 4           # decrement frame pointer
 
-addiu fp, 4, fp          # muevo el stack pointer
-sw a2, fp                # guardo lo que hay en A2 en el stock
 
-sub t0, a2, a1           # r - l
-srl t2, t0, 2            # (r - l ) / 2
-addu t1, a1, t2          # l + (r - l) / 2
+ble t3, t2, END          # if (R <= L) go to END
 
-call
+#la siguiente linea se ejecuta siempre dijo, hay que ver como evitar
+
+#calculates the middle of the array
+subu t4, t3, t2           # t4 <-- R - L
+srl t4, t4, 2             # t4 <-- t4 / 2
+addu t4, t4, t2           # t4 <-- t4 + L
+#t4 <-- L (R - L) / 2
+
+# first call with (L - Middle) range
+addiu fp, 4, fp          # increment frame pointer
+sw t4, fp                # push middle (t4) to stack
+
+addiu fp, 4, fp          # increment frame pointer
+sw t2 , fp               # push L (t2) to stack
+
+addiu fp, 4, fp          # increment frame pointer
+sw t1 , fp               # push P (t1) to stack
+
+jal merge_sort_rec
+
+
+# second call with (Middle+1 - R) range
+addiu fp, 4, fp          # increment frame pointer
+sw t3 , fp               # push R (tr) to stack
+
+addiu fp, 4, fp          # increment frame pointer
+addiu t4, t4, 1          # t4 <-- middle(t4) + 1
+sw t4, fp                # push middle+1 (t4) to stack
+
+addiu fp, 4, fp          # increment frame pointer
+sw t1 , fp               # push P (t1) to stack
+
+jal merge_sort_rec
+
+#aca va el merge
 
 END:
-lw fp, 4(sp)
-addu sp, sp, 16
-j ra
-.end merge_sort
-
-
-void mergeSort(int arr[], int l, int r)
-{
-	if (l < r)
-	{
-		// Same as (l+r)/2, but avoids overflow for
-		// large l and h
-		int m = l+(r-l)/2;
-
-		// Sort first and second halves
-		mergeSort(arr, l, m);
-		mergeSort(arr, m+1, r);
-
-		merge(arr, l, m, r);
-	}
-}
+#aca va algo
