@@ -1,5 +1,33 @@
 #include <sys/regdef.h>
 
+p = [5, 3, 7, 8, 10, 1]
+
+stack
+
+merge_sort()
+p = pop(ptr)
+l = pop(L)
+r = pop(R)
+
+if (l<r)
+m = l + (r-l)/2
+push(m)
+
+push(R)
+push(m+1)
+push(P)
+
+pusH(m)
+push(l)
+push(p)
+
+merge_sort
+m = pop(m)
+merge_sort
+
+merge
+/*----------------------*/
+
 .text
 .align 2
 .globl merge_sort
