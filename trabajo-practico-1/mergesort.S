@@ -69,6 +69,29 @@ srl t4, t4, 2             # t4 <-- t4 / 2
 addu t4, t4, t2           # t4 <-- t4 + L
 #t4 <-- L (R - L) / 2
 
+# call to merge
+addiu fp, 4, fp
+sw ra, fp
+
+addiu fp, 4, fp
+sw t3, fp                # push R (t3) to stack
+
+addiu fp, 4, fp
+sw t4, fp                # push M (t4) to stack
+
+addiu fp, 4, fp
+sw t2, fp                # push L (t2) to stack
+
+addiu fp, 4, fp
+sw t1, fp                # push P (t1) to stack
+
+
+
+# P -> ptr    ---> s0
+# L -> left   ---> s1
+# M ->medio   ---> s2
+# R -> right  ---> s3
+
 # second call with (Middle+1 - R) range
 addiu fp, 4, fp
 sw ra, fp
@@ -99,11 +122,24 @@ sw t1 , fp               # push P (t1) to stack
 jal merge_sort_rec
 jal merge_sort_rec
 
+lw s0, fp                # pop P in s0
+subu fp, fp, 4           # decrement frame pointer
+
+lw s1, fp                # pop L in s1
+subu fp, fp, 4           # decrement frame pointer
+
+lw s2, fp                # pop M in s2
+subu fp, fp, 4           # decrement frame pointer
+
+lw s3, fp                # pop R in s3
+subu fp, fp, 4           # decrement frame pointer
+
 # P -> ptr    ---> s0
 # L -> left   ---> s1
 # M ->medio   ---> s2
 # R -> right  ---> s3
 
+#merge debe llamar a end para popear la direccion de retorno
 jal merge #MIRAR EL RA
 
 END:

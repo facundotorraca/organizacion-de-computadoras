@@ -1,9 +1,11 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include "vector.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "merge_sort.h"
+#include "mergesort.h"
 
 #define ERROR -1
 #define SUCCESS 0
@@ -132,7 +134,7 @@ int version() {
     return SUCCESS;
 }
 
-int sort(FILE* i_file, FILE* o_file) {
+void sort(FILE* i_file, FILE* o_file) {
     vector_t vector;
     vector_init(&vector);
 
