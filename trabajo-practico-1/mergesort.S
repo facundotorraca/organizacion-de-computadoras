@@ -1,33 +1,5 @@
 #include <sys/regdef.h>
 
-p = [5, 3, 7, 8, 10, 1]
-
-stack
-
-merge_sort()
-p = pop(ptr)
-l = pop(L)
-r = pop(R)
-
-if (l<r)
-m = l + (r-l)/2
-push(m)
-
-push(R)
-push(m+1)
-push(P)
-
-pusH(m)
-push(l)
-push(p)
-
-merge_sort
-m = pop(m)
-merge_sort
-
-merge
-/*----------------------*/
-
 .text
 .align 2
 .globl merge_sort
@@ -61,7 +33,7 @@ jal merge_sort_rec       # jump to merge sort recursive
 
 # merge sort recursive that receives by stack
 # an array pointer (P), the left index (L)
-#and the right index (R). Sorts the array pointed by P
+# and the right index (R). Sorts the array pointed by P
 merge_sort_rec:
 # 1st stack element --> array pointer (P)    load in t1
 # 2nd stack element --> left index    (L)    load in t2
@@ -89,19 +61,6 @@ srl t4, t4, 2             # t4 <-- t4 / 2
 addu t4, t4, t2           # t4 <-- t4 + L
 #t4 <-- L (R - L) / 2
 
-# first call with (L - Middle) range
-addiu fp, 4, fp          # increment frame pointer
-sw t4, fp                # push middle (t4) to stack
-
-addiu fp, 4, fp          # increment frame pointer
-sw t2 , fp               # push L (t2) to stack
-
-addiu fp, 4, fp          # increment frame pointer
-sw t1 , fp               # push P (t1) to stack
-
-jal merge_sort_rec
-
-
 # second call with (Middle+1 - R) range
 addiu fp, 4, fp          # increment frame pointer
 sw t3 , fp               # push R (tr) to stack
@@ -113,6 +72,17 @@ sw t4, fp                # push middle+1 (t4) to stack
 addiu fp, 4, fp          # increment frame pointer
 sw t1 , fp               # push P (t1) to stack
 
+# first call with (L - Middle) range
+addiu fp, 4, fp          # increment frame pointer
+sw t4, fp                # push middle (t4) to stack
+
+addiu fp, 4, fp          # increment frame pointer
+sw t2 , fp               # push L (t2) to stack
+
+addiu fp, 4, fp          # increment frame pointer
+sw t1 , fp               # push P (t1) to stack
+
+jal merge_sort_rec
 jal merge_sort_rec
 
 #aca va el merge
