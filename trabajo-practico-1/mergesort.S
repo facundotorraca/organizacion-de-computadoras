@@ -168,9 +168,9 @@ subu fp, fp, 4           # decrement frame pointer
 #merge debe llamar a end para popear la direccion de retorno
 jal merge #MIRAR EL RA
 
-END:
+end:
 lw t0, fp                # pop ra in t0
 subu fp, fp, 4           # decrement frame pointer
-jal t0
+jr t0                     # exit merge_sort
 
 .end
