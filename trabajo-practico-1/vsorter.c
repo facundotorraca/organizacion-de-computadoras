@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include "vector.h"
 #include <stdlib.h>
@@ -132,7 +134,7 @@ int version() {
     return SUCCESS;
 }
 
-int sort(FILE* i_file, FILE* o_file) {
+void sort(FILE* i_file, FILE* o_file) {
     vector_t vector;
     vector_init(&vector);
 
