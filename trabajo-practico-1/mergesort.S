@@ -16,7 +16,7 @@ merge_sort:
 # wrapper that push
 # register into the stack
 
-#save s0 ... s3 in stack
+# save s0 ... s3 in stack
 
 addiu fp, 4, fp
 sw ra, fp
@@ -101,7 +101,7 @@ jal merge_sort_rec
 
 # P -> ptr    ---> s0
 # L -> left   ---> s1
-# M ->medio   ---> s2
+# M -> medio  ---> s2
 # R -> right  ---> s3
 
 jal merge #MIRAR EL RA
@@ -110,7 +110,3 @@ END:
 lw t0, fp                # pop P in t1
 subu fp, fp, 4           # decrement frame pointer
 jal t0
-
-
-
-#aca va algo

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "merge_sort.h"
+#include "mergesort.h"
 
 #define ERROR -1
 #define SUCCESS 0
@@ -137,7 +137,7 @@ int sort(FILE* i_file, FILE* o_file) {
     vector_init(&vector);
 
     while (read_vector(i_file, &vector) == SUCCESS) {
-        mergeSort(vector.array, 0, vector.size-1);
+        merge_sort(vector.array, vector.size);
         print_sorted_vec(o_file, &vector);
     }
 
@@ -197,4 +197,4 @@ int main(int argc, char* const argv[]) {
 
 
 
-//PUTO EL QUE LLEGO HASTA ACA 
+//PUTO EL QUE LLEGO HASTA ACA
