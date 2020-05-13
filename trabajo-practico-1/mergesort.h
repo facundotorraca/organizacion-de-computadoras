@@ -8,7 +8,8 @@
 // with the subarray is arr[m+1..r]. Receives an auxiliary
 // array to do the merge (t). It is guaranteed that (t)
 // has enougth size to store the entire array.
-void _merge(int p[], int t[], int l, int m, int r) {
+void _merge(int p[], int t[], int l, int r) {
+    int m = l + (r - l) / 2;   // middle of the subarray
 	int l_size = m - l + 1;    // left subarray size
 	int r_size = r - m;        // right subarray size
 
@@ -54,7 +55,7 @@ void _merge_sort_rec(int p[], int t[], int l, int r) {
 		_merge_sort_rec(p, t, l, m);
 		_merge_sort_rec(p, t, m+1, r);
 
-		_merge(p, t, l, m, r);
+		_merge(p, t, l, r);
 	}
 }
 

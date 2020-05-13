@@ -1,176 +1,138 @@
 #include <sys/regdef.h>
+#include "mymalloc.S"
 
 .text
 .align 2
 .globl merge_sort
 .ent merge_sort
 
-# wrapper to merge sort that receives array pointer
-# and array size by args registers and push to stack
-# array pointer, left index (0), and right index (size-1)
-# and then call the recursive function of merge sort
+// HACER MALLOC DE AUX_PTR Y GUARDARLO EN 16(SP)
+
+#-----------------------------MERGE-SORT--------------------------------#
 merge_sort:
-# a0 --> array ptr
-# a1 --> array size
+    # a0 -> array pointer
+    # a1 -> array size
 
-# wrapper that push
-# register into the stack
+    # fp -> stack begin
+    # 40 -> stack size
+    # ra -> retunr addr
+	.frame fp, 40, ra  # 16 -> SRA | 8 -> LTA | 16 -> ABA
 
-# save s0 ... s3 in stack
+    # stack frame creation
+    subu sp, sp, 40  # callee stack -> [sp, sp + 40]
 
-addiu fp, 4, fp          # increment frame pointer
-sw s3, fp                # push s3 to stack
+    # fill ABA caller
+                        # a3 reserved area     | caller stack
+                        # a2 reserved area     | caller stack
+    sw a1, 44(sp)       # save a1 in (44 + sp) | caller stack
+    sw a0, 40(sp)       # save a0 in (40 + sp) | caller stack
 
-addiu fp, 4, fp          # increment frame pointer
-sw s2, fp                # push s2 to stack
+    # saved register area (SRA)
+                        # padding in (36 + sp) | callee stack
+	sw ra, 32(sp)       # save ra in (32 + sp) | callee stack
+	sw fp, 28(sp)	    # save fp in (28 + sp) | callee stack
+    .cprestore 24		# save gp in (24 + sp) | callee stack
 
-addiu fp, 4, fp          # increment frame pointer
-sw s1, fp                # push s1 to stack
+	move fp, sp         # fp = sp
 
-addiu fp, 4, fp          # increment frame pointer
-sw s0, fp                # push s0 to stack
+    # local and temporary area (LTA)
+    # padding stack[sp + 20]
+    # sw PTR_AUX, 16(sp)
 
+    lw a0, 40(fp)       # retrieve a0 from ABA - a0 = stack[40 + fp]
+    lw a1, 44(fp)       # retrieve a1 from ABA - a1 = stack[44 + fp]
+    subu t1, a1, 1      # calculate right index (t1 = size - 1)
 
-#save return address
-addiu fp, 4, fp          # increment frame pointer
-sw ra, fp                # push ra (return address) to stack
+    move a0, a0         # redundat (a0 = array pointer (P))
+    move a1, t0         # a1 = t0 = merge aux array pointer (T)
+    move a2, zero       # a2 = left index (L) = 0
+    move a3, t1         # a3 = t1 = right index (R) = size - 1
 
-subu t0, a1, 1           # calculate right index (t0 = size - 1)
-addiu fp, 4, fp          # increment frame pointer
-sw t0 , fp               # push rigth index to stack (R, right index)
+    # argument building area (ABA)
+    # reserved 16 bytes for callee
 
-addiu fp, 4, fp          # increment frame pointer
-sw zero , fp             # push 0 to stack (L, left index)
+    jal _merge_sort_rec
 
-addiu fp, 4, fp          # increment frame pointer
-sw a0, fp                # push a0 to stack (P, ptr)
+    la  t0, _return_ms # t0 = _return_ms address
+    jr t0              # jump to _ms address
+#-----------------------------------------------------------------------#
 
-jal merge_sort_rec       # jump to merge sort recursive
+#-------------------------MERGE-SORT-RECURSIVE--------------------------#
+_merge_sort_rec:
+    # a0 -> array pointer (P)
+    # a1 -> merge aux array pointer (T)
+    # a2 -> left index (L)
+    # a3 -> right index (R)
 
-#Popping return address
-lw t0, fp                # pop ra (return address) in t0
-subu fp, fp, 4           # decrement frame pointer
+    # fp -> stack begin
+    # 40 -> stack size
+    # ra -> retunr addr
+    .frame fp, 40, ra  # 16 -> SRA | 8 -> LTA | 16 -> ABA
 
-#Popping saved registers
-lw s0, fp                # pop s0 from stack
-subu fp, fp, 4           # decrement frame pointer
+    # stack frame creation
+    subu sp, sp, 40  # callee stack -> [sp, sp + 40]
 
-lw s1, fp                # pop s1 from stack
-subu fp, fp, 4           # decrement frame pointer
+    # fill ABA caller
+    sw a3, 52(sp)       # save a3 in (52 + sp) | caller stack
+    sw a2, 48(sp)       # save a2 in (48 + sp) | caller stack
+    sw a1, 44(sp)       # save a1 in (44 + sp) | caller stack
+    sw a0, 40(sp)       # save a0 in (40 + sp) | caller stack
 
-lw s2, fp                # pop s2 from stack
-subu fp, fp, 4           # decrement frame pointer
+    # saved register area (SRA)
+                        # padding in (36 + sp) | callee stack
+    sw ra, 32(sp)       # save ra in (32 + sp) | callee stack
+    sw fp, 28(sp)	    # save fp in (28 + sp) | callee stack
+    .cprestore 24		# save gp in (24 + sp) | callee stack
 
-lw s3, fp                # pop s3 from stack
-subu fp, fp, 4           # decrement frame pointer
+    #calculates the middle of the array
+    subu t0, a3, a2     # t0 <-- R - L
+    srl t0, t0, 1       # t0 <-- t0 / 2
+    addu t0, t0, a2     # t0 <-- t0 + L
+    # t0 <-- L (R - L) / 2 = M
 
-jal t0                   #Jump to caller function
+    # local and temporary area (LTA)
+    # padding stack[sp + 20]
+    lw t0, 16(fp)
 
+    move a0, a0         # redundamt (a0 = array pointer (P))
+    move a1, a1         # redundant (a1 = merge aux array pointer (T))
+    move a2, a2         # redundant (a2 = left index (L))
+    move a3, t0         # a3 = t1 = right index (R) = m
 
+    jal _merge_sort_rec
 
-# merge sort recursive that receives by stack
-# an array pointer (P), the left index (L)
-# and the right index (R). Sorts the array pointed by P
-merge_sort_rec:
-# 1st stack element --> array pointer (P)    load in t1
-# 2nd stack element --> left index    (L)    load in t2
-# 3rd stack element --> right index   (R)    load in t3
+    lw t0, 16(fp)       # retrieve m
+    addiu t0, t0, 1     # m = m + 1
 
-lw t1, fp                # pop P in t1
-subu fp, fp, 4           # decrement frame pointer
+    lw a3, 52(sp)       # retrive a3
 
-lw t2, fp                # pop L in t2
-subu fp, fp, 4           # decrement frame pointer
+    move a0, a0         # redundamt (a0 = array pointer (P))
+    move a1, a1         # redundant (a1 = merge aux array pointer (T))
+    move a2, t0         # a2 = left index (L) = m + 1
+    move a3, a3         # a3 = right index (R)
 
-lw t3, fp                # pop R in t3
-subu fp, fp, 4           # decrement frame pointer
+    jal _merge_sort_rec
 
+    lw a3, 52(sp)       # retrieve a3 = R
+    lw a2, 48(sp)       # retrieve a2 = L
 
-ble t3, t2, END          # if (R <= L) go to END
+    move a0, a0         # redundamt (a0 = array pointer (P))
+    move a1, a1         # redundant (a1 = merge aux array pointer (T))
+    move a2, a2         # redundant (a2 = left index (L))
+    move a3, a3         # redundant (a3 = right index (R))
 
-#la siguiente linea se ejecuta siempre dijo, hay que ver como evitar
+    jal merge
 
-#calculates the middle of the array
-subu t4, t3, t2           # t4 <-- R - L
-srl t4, t4, 1             # t4 <-- t4 / 2
-addu t4, t4, t2           # t4 <-- t4 + L
-#t4 <-- L (R - L) / 2 = M
+    la  t0, _return_ms # t0 = _return_ms address
+    jr t0              # jump to _ms address
+#-----------------------------------------------------------------------#
 
-# call to merge
-addiu fp, 4, fp          # increment frame pointer
-sw ra, fp                # push ra (return address) to stack
-
-addiu fp, 4, fp
-sw t3, fp                # push R (t3) to stack
-
-addiu fp, 4, fp
-sw t4, fp                # push M (t4) to stack
-
-addiu fp, 4, fp
-sw t2, fp                # push L (t2) to stack
-
-addiu fp, 4, fp
-sw t1, fp                # push P (t1) to stack
-
-
-# P -> ptr    ---> s0
-# L -> left   ---> s1
-# M ->medio   ---> s2
-# R -> right  ---> s3
-
-# second call with (Middle+1 - R) range
-addiu fp, 4, fp          # increment frame pointer
-sw ra, fp                # push ra (return address) to stack
-
-addiu fp, 4, fp          # increment frame pointer
-sw t3 , fp               # push R (tr) to stack
-
-addiu fp, 4, fp          # increment frame pointer
-addiu t5, t4, 1          # t5 <-- middle(t4) + 1
-sw t5, fp                # push middle+1 (t5) to stack
-
-addiu fp, 4, fp          # increment frame pointer
-sw t1 , fp               # push P (t1) to stack
-
-# first call with (L - Middle) range
-addiu fp, 4, fp          # increment frame pointer
-sw ra, fp                # push ra (return address) to stack
-
-addiu fp, 4, fp          # increment frame pointer
-sw t4, fp                # push middle (t4) to stack
-
-addiu fp, 4, fp          # increment frame pointer
-sw t2 , fp               # push L (t2) to stack
-
-addiu fp, 4, fp          # increment frame pointer
-sw t1 , fp               # push P (t1) to stack
-
-jal merge_sort_rec
-jal merge_sort_rec
-
-lw s0, fp                # pop P in s0
-subu fp, fp, 4           # decrement frame pointer
-
-lw s1, fp                # pop L in s1
-subu fp, fp, 4           # decrement frame pointer
-
-lw s2, fp                # pop M in s2
-subu fp, fp, 4           # decrement frame pointer
-
-lw s3, fp                # pop R in s3
-subu fp, fp, 4           # decrement frame pointer
-
-# P -> ptr     ---> s0
-# L -> left    ---> s1
-# M -> medio   ---> s2
-# R -> right   ---> s3
-
-#merge debe llamar a end para popear la direccion de retorno
-jal merge #MIRAR EL RA
-
-end:
-lw t0, fp                # pop ra in t0
-subu fp, fp, 4           # decrement frame pointer
-jr t0                     # exit merge_sort
-
-.end
+#-------------------------------RETURN----------------------------------#
+_return_ms:
+    # retreive registers from SRA
+    lw	gp, 24(sp)
+    lw	fp, 28(sp)
+    lw	ra, 32(sp)
+    addiu sp, sp, 40   # increment stack pointer
+    jr	ra             # jump to return address
+#-----------------------------------------------------------------------#

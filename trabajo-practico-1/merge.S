@@ -15,8 +15,8 @@ merge:
 # 4th arg s3 --> rigth index   (R)
 
 #Push return address to stack
-addiu fp, 4, fp          # increment frame pointer
-sw ra, fp                # push ra (return address) to stack
+addiu fp, 4, fp             # increment frame pointer
+sw ra, fp                   # push ra (return address) to stack
 
 
 sll t0, s2, 2               #t0 = m*4 bytes (m es una cantidad (indice))
@@ -25,7 +25,7 @@ lw t1, t0                   #t1 = p[m]
 
 lw t2, 4(t0)                #t2 = p[m+1]
 
-ble t1,t2, end             #if (p[m] <= p[m + 1]) jump to end (return)
+ble t1,t2, end              #if (p[m] <= p[m + 1]) jump to end (return)
 nop
 
 addiu t2, s1, zero          #t2 = l
