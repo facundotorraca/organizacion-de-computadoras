@@ -31,7 +31,7 @@ merge_sort:
                         # padding in (36 + sp) | callee stack
 	sw ra, 32(sp)       # save ra in (32 + sp) | callee stack
 	sw fp, 28(sp)	    # save fp in (28 + sp) | callee stack
-    .cprestore 24		# save gp in (24 + sp) | callee stack
+    .cprestore 24	    # save gp in (24 + sp) | callee stack
 
 	move fp, sp         # fp = sp
 
