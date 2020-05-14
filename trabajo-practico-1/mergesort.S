@@ -123,8 +123,8 @@ _merge_sort_rec:
 
     jal merge
 
-    la  t0, _return_ms # t0 = _return_ms address
-    jr t0              # jump to _ms address
+    la  t0, _return_ms  # t0 = _return_ms address
+    jr t0               # jump to _ms address
 #-----------------------------------------------------------------------#
 
 #-------------------------------RETURN----------------------------------#
