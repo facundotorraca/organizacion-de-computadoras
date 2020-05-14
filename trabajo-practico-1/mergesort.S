@@ -128,7 +128,7 @@ _merge_sort_rec:
     la  t0, _return_ms  # t0 = _return_ms address
     jr t0               # jump to _ms address
 #-----------------------------------------------------------------------#
-
+    
 #-------------------------------RETURN----------------------------------#
 _return_ms:
     # retreive registers from SRA
