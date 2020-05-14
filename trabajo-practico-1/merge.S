@@ -154,7 +154,7 @@ while_l:                # while (i < l_size)
     jr t7               # jump to while_l
 
 end_l:
-    nop
+    nop                 # continue to while_r
 #--------------------------------------------------------#
 
 #----------------------WHILE RIGHT-----------------------#
@@ -187,28 +187,28 @@ while_r:                # while (j < r_size)
     jr t7               # jump to while_r
 
 end_r:
-      nop
+    nop               # continue to for
 #--------------------------------------------------------#
 
 #-------------------------FOR----------------------------#
     # Copy auxiliary elements on the original array.
 
-    lw t3, 8(fp)          # t3 <-- k
-    move t4, a2           # t4 <-- i = L
+    lw t3, 8(fp)        # t3 <-- k
+    move t4, a2         # t4 <-- i = L
 
 for:
-    blt t3, t4, end       # for (i = l; i < k; i++)
-    sll t5, t4, 2         # t5 <-- (i*4)
-    addiu t6, t5, a1      # t6 <-- &t[i] | mem_pos
-    lw t6, t6             # t6 <-- t[i] | value
+    blt t3, t4, _return # for (i = l; i < k; i++)
+    sll t5, t4, 2       # t5 <-- (i*4)
+    addiu t6, t5, a1    # t6 <-- &t[i] | mem_pos
+    lw t6, t6           # t6 <-- t[i] | value
 
-    addiu t7, t5, a0      # t7 <-- &p[i] | mem_pos
-    sw  t6, t7            # p[i] = t[i];
+    addiu t7, t5, a0    # t7 <-- &p[i] | mem_pos
+    sw  t6, t7          # p[i] = t[i];
 
-    addiu t4, t4, 1       # t4 <-- t4 + 1
+    addiu t4, t4, 1     # t4 <-- t4 + 1
 
-    la t7, for            # t7 <-- address of for
-    jr t7                 # jump to for
+    la t7, for          # t7 <-- address of for
+    jr t7               # jump to for
 #--------------------------------------------------------#
 
 #-------------------------RETURN-------------------------#

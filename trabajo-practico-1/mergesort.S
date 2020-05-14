@@ -33,7 +33,7 @@ merge_sort:
 	sw fp, 28(sp)	    # save fp in (28 + sp) | callee stack
     .cprestore 24	    # save gp in (24 + sp) | callee stack
 
-	move fp, sp         # fp = sp
+    move fp, sp         # fp = sp
 
     # local and temporary area (LTA)
     # padding stack[sp + 20]
