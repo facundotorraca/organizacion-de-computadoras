@@ -6,12 +6,12 @@
 .globl merge
 .ent merge
 
+#--------------------------------MERGE----------------------------------#
 merge:
     # a0 -> array pointer (P)
     # a1 -> merge aux array pointer (T)
     # a2 -> left index (L)
     # a3 -> right index (R)
-
 
     # fp -> stack begin
     # 24 -> stack size
@@ -36,7 +36,6 @@ merge:
 
     move fp, sp         # fp = sp
 
-
     # t0 -> middle index (m)
     # t1 -> left subarray size  (l_size)
     # t2 -> right subarray size (r_size)
@@ -59,8 +58,6 @@ merge:
     # t3 -> temp to load | index left subarray (i)
     # t4 -> temp to load | index right subarray (j)
 
-
-
     li t3, 0            # t3 <-- i = 0
     li t4, 0            # t4 <-- j = 0
     sw t3, 0(fp)        # save i = 0 in (0 + fp)
@@ -68,11 +65,7 @@ merge:
     sw a2, 8(fp)        # save k = L in (8 + fp)
 
 
-#------------------------------------------#
-
-#-----------WHILE LEFT AND RIGHT-----------#
-
-
+#-----------------WHILE LEFT AND RIGHT-------------------#
 while_lr:               # while (i < l_size && j < r_size)
     lw t3, 0(fp)        # t3 <-- i
     lw t4, 4(fp)        # t4 <-- j
@@ -107,7 +100,6 @@ while_lr:               # while (i < l_size && j < r_size)
     la t7, inc_k_lr     # t7 <-- address of inc_k_lr
     jr t7               # jump to inc_k_lr
 
-
 else_lr:
 
     lw t7, 8(fp)        # t7 <-- k
@@ -129,17 +121,12 @@ inc_k_lr:
     la t7, while_lr     # t7 <-- address of while_lr
     jr t7               # jump to while_lr
 
-
 end_lr:
     nop                 # continue to while_l
+#--------------------------------------------------------#
 
-
-#-----------------------------------------#
-
-#---------------WHILE LEFT----------------#
-
-  #Copy the remaining elements of left side, if there are any.
-
+#-----------------------WHILE LEFT-----------------------#
+# copy the remaining elements of left side, if there are any.
 while_l:                # while (i < l_size)
 
     lw t7, 0(fp)        # t7 <-- i
@@ -168,50 +155,43 @@ while_l:                # while (i < l_size)
 
 end_l:
     nop
+#--------------------------------------------------------#
 
+#----------------------WHILE RIGHT-----------------------#
+# copy the remaining elements of right side, if there are any.
+while_r:                # while (j < r_size)
 
-#-----------------------------------------#
+    lw t7, 4(fp)        # t7 <-- j
+    bge t7, t2, end_r   # if (j >= r_size) jump to end_r
 
-#---------------WHILE RIGHT----------------#
+    addiu t4, t0, t7    # t4 <--  m + j
+    addiu t4, t4, 1     # t4 <--  m + j + 1 | index
+    sll t4, t4, 2       # t4 <-- (t4 * 4) | mem_pos
+    addiu t6, t7, a0    # t6 <-- &p[m + j + 1] | mem_pos
+    lw t6, t6           # t6 <-- p[m + j + 1] | value
 
+    lw t7, 8(fp)        # t7 <-- k
+    sll t7, t7, 2       # t7 <-- (k*4)
+    addiu t7, a1, t7    # t7 <-- t + (k*4) = &t[k] | mem_pos
+    sw t6, t7           # t[k] = p[m + j + 1]
 
-      #Copy the remaining elements of right side, if there are any.
+    lw t7, 4(fp)        # t7 <-- j
+    addiu t7, t7, 1     # t7 <-- j + 1
+    sw t7, 4(fp)        # j <-- j + 1
 
-while_r:                    # while (j < r_size)
+    lw t7, 8(fp)        # t7 <-- k
+    addiu t7, t7, 1     # t7 <-- k + 1
+    sw t7, 8(fp)        # k <-- k + 1
 
-      lw t7, 4(fp)        # t7 <-- j
-      bge t7, t2, end_r   # if (j >= r_size) jump to end_r
-
-      addiu t4, t0, t7    # t4 <--  m + j
-      addiu t4, t4, 1     # t4 <--  m + j + 1 | index
-      sll t4, t4, 2       # t4 <-- (t4 * 4) | mem_pos
-      addiu t6, t7, a0    # t6 <-- &p[m + j + 1] | mem_pos
-      lw t6, t6           # t6 <-- p[m + j + 1] | value
-
-      lw t7, 8(fp)        # t7 <-- k
-      sll t7, t7, 2       # t7 <-- (k*4)
-      addiu t7, a1, t7    # t7 <-- t + (k*4) = &t[k] | mem_pos
-      sw t6, t7           # t[k] = p[m + j + 1]
-
-      lw t7, 4(fp)        # t7 <-- j
-      addiu t7, t7, 1     # t7 <-- j + 1
-      sw t7, 4(fp)        # j <-- j + 1
-
-      lw t7, 8(fp)        # t7 <-- k
-      addiu t7, t7, 1     # t7 <-- k + 1
-      sw t7, 8(fp)        # k <-- k + 1
-
-      la t7, while_r      # t7 <-- address of while_r
-      jr t7               # jump to while_r
+    la t7, while_r      # t7 <-- address of while_r
+    jr t7               # jump to while_r
 
 end_r:
       nop
+#--------------------------------------------------------#
 
-#-----------------------------------------#
-
-#-----------------FOR---------------------#
-
-      # Copy auxiliary elements on the original array.
+#-------------------------FOR----------------------------#
+    # Copy auxiliary elements on the original array.
 
     lw t3, 8(fp)          # t3 <-- k
     move t4, a2           # t4 <-- i = L
@@ -229,18 +209,14 @@ for:
 
     la t7, for            # t7 <-- address of for
     jr t7                 # jump to for
+#--------------------------------------------------------#
 
-
-#-----------------------------------------------------------------------#
-
-#-------------------------------RETURN----------------------------------#
-
-end:
+#-------------------------RETURN-------------------------#
+_return:
     # retreive registers from SRA
     lw	gp, 16(sp)
     lw	fp, 20(sp)
     lw	ra, 24(sp)
     addiu sp, sp, 32    # increment stack pointer
     jr	ra              # jump to return address
-
-#-----------------------------------------------------------------------#
+#--------------------------------------------------------#
