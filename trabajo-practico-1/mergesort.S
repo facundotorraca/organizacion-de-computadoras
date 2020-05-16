@@ -24,6 +24,7 @@ merge_sort:
                         # a3 reserved area     | caller stack
                       	# a2 reserved area     | caller stack
     sw a1, 44(sp)      	# save a1 in (44 + sp) | caller stack
+    sw a0, 40(sp)       # save a1 in (40 + sp) | caller stack
 
     # saved register area (SRA)
                       	# padding in (36 + sp) | callee stack
