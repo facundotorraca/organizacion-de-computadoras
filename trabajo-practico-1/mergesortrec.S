@@ -17,7 +17,7 @@ _merge_sort_rec:
     # 40 -> stack size
     # ra -> retunr addr
     .frame fp, 40, ra   # 16 -> SRA | 8 -> LTA | 16 -> ABA
-    
+
     # stack frame creation
     subu sp, sp, 40     # callee stack -> [sp, sp + 40]
 
@@ -34,6 +34,9 @@ _merge_sort_rec:
     sw a2, 48(fp)       # save a2 in (48 + sp) | caller stack
     sw a1, 44(fp)       # save a1 in (44 + sp) | caller stack
     sw a0, 40(fp)       # save a0 in (40 + sp) | caller stack
+
+    la t0, _return_ms_rec
+    bge a2, a3, t0      # if (L >= R) return
 
     #calculates the middle of the array
     subu t0, a3, a2     # t0 <-- R - L

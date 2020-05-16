@@ -37,7 +37,7 @@ merge_sort:
     # local and temporary area (LTA)
                         # padding stack[sp + 20]
     sll a0, a1, 2       # a0 = array size * 4 (bytes)
-    #jal mymalloc       # call void* mymalloc(size_t)
+    jal mymalloc        # call void* mymalloc(size_t)
                         # return value stored in v0
 
     li v0, 5
