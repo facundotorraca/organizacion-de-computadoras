@@ -20,6 +20,7 @@ merge_sort:
 
     # stack frame creation
     subu sp, sp, 40		# callee stack -> [sp, sp + 40]
+    .cprestore 24	    # save gp in (24 + sp) | callee stack
 
     # fill ABA caller
                         # a3 reserved area     | caller stack
@@ -31,7 +32,6 @@ merge_sort:
                       	# padding in (36 + sp) | callee stack
 	sw ra, 32(sp)	    # save ra in (32 + sp) | callee stack
 	sw fp, 28(sp)	    # save fp in (28 + sp) | callee stack
-    .cprestore 24	    # save gp in (24 + sp) | callee stack
 
     move fp, sp         # fp = sp
 
@@ -89,6 +89,7 @@ _merge_sort_rec:
 
     # stack frame creation
     subu sp, sp, 40     # callee stack -> [sp, sp + 40]
+    .cprestore 24       # save gp in (24 + sp) | callee stack
 
     # fill ABA caller
     sw a3, 52(sp)       # save a3 in (52 + sp) | caller stack
@@ -100,7 +101,6 @@ _merge_sort_rec:
                         # padding in (36 + sp) | callee stack
     sw ra, 32(sp)       # save ra in (32 + sp) | callee stack
     sw fp, 28(sp)       # save fp in (28 + sp) | callee stack
-    .cprestore 24       # save gp in (24 + sp) | callee stack
 
 	move fp, sp         # fp = sp
 
