@@ -4,9 +4,10 @@
 
 .text
 .align 2
-.globl merge_sort
-.ent merge_sort
 
+
+.ent merge_sort
+.globl merge_sort
 #-----------------------------MERGE-SORT--------------------------------#
 merge_sort:
     # a0 -> array pointer
@@ -19,7 +20,6 @@ merge_sort:
 
     # stack frame creation
     subu sp, sp, 40		# callee stack -> [sp, sp + 40]
-    #.cprestore 24	    # save gp in (24 + sp) | callee stack
 
     # fill ABA caller
                         # a3 reserved area     | caller stack
@@ -31,7 +31,7 @@ merge_sort:
                       	# padding in (36 + sp) | callee stack
 	sw ra, 32(sp)	    # save ra in (32 + sp) | callee stack
 	sw fp, 28(sp)	    # save fp in (28 + sp) | callee stack
-
+    .cprestore 24	    # save gp in (24 + sp) | callee stack
 
     move fp, sp         # fp = sp
 
@@ -59,10 +59,22 @@ merge_sort:
     lw a0, 16(fp)       # load aux_array in a0
     jal myfree          # free memory requested by aux_array
 
-    la  t0, _return_ms  # t0 = _return_ms address
-    jr t0               # jump to _ms address
+#--------------------RETURN-----------------------#
+_return_ms:
+    # retreive registers from SRA
+    lw	gp, 24(sp)
+    lw	fp, 28(sp)
+    lw	ra, 32(sp)
+    addiu sp, sp, 40    # increment stack pointer
+    jr	ra              # jump to return address
+#-------------------------------------------------#
+
+.end merge_sort
 #-----------------------------------------------------------------------#
 
+
+.ent _merge_sort_rec
+.globl _merge_sort_rec
 #-------------------------MERGE-SORT-RECURSIVE--------------------------#
 _merge_sort_rec:
     # a0 -> array pointer (P)
@@ -77,7 +89,6 @@ _merge_sort_rec:
 
     # stack frame creation
     subu sp, sp, 40     # callee stack -> [sp, sp + 40]
-    .cprestore 24       # save gp in (24 + sp) | callee stack
 
     # fill ABA caller
     sw a3, 52(sp)       # save a3 in (52 + sp) | caller stack
@@ -89,6 +100,7 @@ _merge_sort_rec:
                         # padding in (36 + sp) | callee stack
     sw ra, 32(sp)       # save ra in (32 + sp) | callee stack
     sw fp, 28(sp)       # save fp in (28 + sp) | callee stack
+    .cprestore 24       # save gp in (24 + sp) | callee stack
 
 	move fp, sp         # fp = sp
 
@@ -131,18 +143,15 @@ _merge_sort_rec:
 
     jal merge
 
-    la  t0, _return_ms  # t0 = _return_ms address
-    jr t0               # jump to _ms address
-#-----------------------------------------------------------------------#
-
-#-------------------------------RETURN----------------------------------#
-_return_ms:
+#--------------------RETURN-----------------------#
+_return_ms_rec:
     # retreive registers from SRA
     lw	gp, 24(sp)
     lw	fp, 28(sp)
     lw	ra, 32(sp)
     addiu sp, sp, 40    # increment stack pointer
     jr	ra              # jump to return address
-#-----------------------------------------------------------------------#
+#-------------------------------------------------#
 
-.end merge_sort
+.end _merge_sort_rec
+#-----------------------------------------------------------------------#
