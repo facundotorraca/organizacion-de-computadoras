@@ -164,7 +164,7 @@ while_r:                # while (j < r_size)
     addu t4, t0, t4     # t4 <--  m + j
     addiu t4, t4, 1     # t4 <--  m + j + 1 | index
     sll t4, t4, 2       # t4 <-- (t4 * 4) | mem_pos
-    addu t6, t7, a0     # t6 <-- &p[m + j + 1] | mem_pos
+    addu t6, t4, a0     # t6 <-- &p[m + j + 1] | mem_pos
     lw t6, 0(t6)        # t6 <-- p[m + j + 1] | value
 
     lw t7, 8(fp)        # t7 <-- k
