@@ -67,25 +67,25 @@ while_lr:               # while (i < l_size && j < r_size)
     bge t3, t1, end_lr  # if (i >= l_size) jump to end_lr
     bge t4, t2, end_lr  # if (j >= r_size) jump to end_lr
 
-    addu t3, a2, t3    # t3 <-- L + i | index
-    addu t4, t0, t4    # t4 <-- m + j
+    addu t3, a2, t3     # t3 <-- L + i | index
+    addu t4, t0, t4     # t4 <-- m + j
     addiu t4, t4, 1     # t4 <-- m + j + 1 | index
 
     sll t3, t3, 2       # t3 <-- (t3 * 4) | memory pos
     sll t4, t4, 2       # t4 <-- (t4 * 4) | memory pos
 
-    addu t5, t3, a0    # t5 <-- &p[l + i] | memory pos
-    lw t5, t5           # t5 <-- p[l + i]  | value
+    addu t5, t3, a0     # t5 <-- &p[l + i] | memory pos
+    lw t5, 0(t5)        # t5 <-- p[l + i]  | value
 
-    addu t6, t4, a0    # t6 <-- &p[m + 1 + j] | memory pos
-    lw t6, t6           # t6 <-- p[m + 1 + j]  | value
+    addu t6, t4, a0     # t6 <-- &p[m + 1 + j] | memory pos
+    lw t6, 0(t6)        # t6 <-- p[m + 1 + j]  | value
 
     blt t6, t5, else_lr # if (p[m + 1 + j] < p[l + i] ) jump to else_lr
 
     lw t7, 8(fp)        # t7 <-- k
     sll t7, t7, 2       # t7 <-- (k*4)
-    addu t7, a1, t7    # t7 <-- t + (k*4) = &t[k] | memory pos
-    sw t5, t7           # t[k] = p[l + i]
+    addu t7, a1, t7     # t7 <-- t + (k*4) = &t[k] | memory pos
+    sw t5, 0(t7)        # t[k] = p[l + i]
 
     lw t7, 0(fp)        # t7 <-- i
     addiu t7, t7, 1     # t7 <-- i + 1
@@ -98,8 +98,8 @@ else_lr:
 
     lw t7, 8(fp)        # t7 <-- k
     sll t7, t7, 2       # t7 <-- (k*4)
-    addu t7, a1, t7    # t7 <-- t + (k*4) = &t[k] | memory pos
-    sw t6, t7           # t[k] = p[m + 1 + j]
+    addu t7, a1, t7     # t7 <-- t + (k*4) = &t[k] | memory pos
+    sw t6, 0(t7)        # t[k] = p[m + 1 + j]
 
     lw t7, 4(fp)        # t7 <-- j
     addiu t7, t7, 1     # t7 <-- j + 1
@@ -126,15 +126,15 @@ while_l:                # while (i < l_size)
     lw t3, 0(fp)        # t3 <-- i
     bge t3, t1, end_l   # if (i < l_size) jump to end_l
 
-    addu t3, t3, a2    # t3 <-- L + i
+    addu t3, t3, a2     # t3 <-- L + i
     sll t3, t3, 2       # t3 <-- (t3 * 4)  | memory pos
-    addu t5, t3, a0    # t5 <-- &p[l + i] | memory pos
-    lw t5, t5           # t5 <-- p[l + i]  | value
+    addu t5, t3, a0     # t5 <-- &p[l + i] | memory pos
+    lw t5, 0(t5)        # t5 <-- p[l + i]  | value
 
     lw t7, 8(fp)        # t7 <-- k
     sll t7, t7, 2       # t7 <-- (k*4)
-    addu t7, a1, t7    # t7 <-- t + (k*4) = &t[k] | mem_pos
-    sw t5, t7           # t[k] = p[l + i]
+    addu t7, a1, t7     # t7 <-- t + (k*4) = &t[k] | mem_pos
+    sw t5, 0(t7)        # t[k] = p[l + i]
 
     lw t3, 0(fp)        # t3 <-- i
     addiu t3, t3, 1     # t3 <-- i + 1
@@ -158,16 +158,16 @@ while_r:                # while (j < r_size)
     lw t4, 4(fp)        # t4 <-- j
     bge t4, t2, end_r   # if (j >= r_size) jump to end_r
 
-    addu t4, t0, t4    # t4 <--  m + j
+    addu t4, t0, t4     # t4 <--  m + j
     addiu t4, t4, 1     # t4 <--  m + j + 1 | index
     sll t4, t4, 2       # t4 <-- (t4 * 4) | mem_pos
-    addu t6, t7, a0    # t6 <-- &p[m + j + 1] | mem_pos
-    lw t6, t6           # t6 <-- p[m + j + 1] | value
+    addu t6, t7, a0     # t6 <-- &p[m + j + 1] | mem_pos
+    lw t6, 0(t6)        # t6 <-- p[m + j + 1] | value
 
     lw t7, 8(fp)        # t7 <-- k
     sll t7, t7, 2       # t7 <-- (k*4)
-    addu t7, a1, t7    # t7 <-- t + (k*4) = &t[k] | mem_pos
-    sw t6, t7           # t[k] = p[m + j + 1]
+    addu t7, a1, t7     # t7 <-- t + (k*4) = &t[k] | mem_pos
+    sw t6, 0(t7)        # t[k] = p[m + j + 1]
 
     lw t4, 4(fp)        # t7 <-- j
     addiu t4, t4, 1     # t7 <-- j + 1
@@ -193,11 +193,11 @@ end_r:
 for:
     blt t3, t4, _return # for (i = l; i < k; i++)
     sll t5, t4, 2       # t5 <-- (i*4)
-    addu t6, t5, a1    # t6 <-- &t[i] | mem_pos
-    lw t6, t6           # t6 <-- t[i] | value
+    addu t6, t5, a1     # t6 <-- &t[i] | mem_pos
+    lw t6, 0(t6)        # t6 <-- t[i] | value
 
-    addu t7, t5, a0    # t7 <-- &p[i] | mem_pos
-    sw  t6, t7          # p[i] = t[i];
+    addu t7, t5, a0     # t7 <-- &p[i] | mem_pos
+    sw  t6, 0(t7)       # p[i] = t[i];
 
     addiu t4, t4, 1     # t4 <-- t4 + 1
 
