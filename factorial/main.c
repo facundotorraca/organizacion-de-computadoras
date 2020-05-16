@@ -3,8 +3,16 @@
 #include "factorial.h"
 
 int main(int argc, const char* argv[]){
-	unsigned int res = factorial(15);
-	fprintf(stdout, "factorial 15: %u\n", res);
+	unsigned int n;
+	
+	if (argc == 2) {
+		n = (unsigned)atoi(argv[1]);
+	} else {
+		n = 15;
+	}
+	
+	unsigned int res = factorial(n);
+	fprintf(stdout, "factorial %u: %u\n", n, res);
 	return 0;
 }
 
