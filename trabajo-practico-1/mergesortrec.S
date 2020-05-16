@@ -42,16 +42,16 @@ _merge_sort_rec:
     subu t0, a3, a2     # t0 <-- R - L
     srl t0, t0, 1       # t0 <-- t0 / 2
     addu t0, t0, a2     # t0 <-- t0 + L
-    # t0 <-- L (R - L) / 2 = M
+    # t0 <-- L (R - L) / 2 = m
 
     # local and temporary area (LTA)
     # padding stack[sp + 20]
-    lw t0, 16(fp)
+    sw t0, 16(fp)
 
     move a0, a0         # redundamt (a0 = array pointer (P))
     move a1, a1         # redundant (a1 = merge aux array pointer (T))
     move a2, a2         # redundant (a2 = left index (L))
-    move a3, t0         # a3 = t1 = right index (R) = m
+    move a3, t0         # a3 = t0 = right index (R) = m
 
     jal _merge_sort_rec
 
