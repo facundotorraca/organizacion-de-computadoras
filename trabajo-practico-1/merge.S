@@ -16,9 +16,11 @@ merge:
     # 32 -> stack size
     # ra -> retunr addr
     .frame fp, 32, ra  # 16 -> SRA | 16 -> LTA
-    .set noreorder
-    .cpload t9
-    .set reorder
+
+    #.set noreorder
+    #.cpload t9
+    #.set reorder
+
     # leaf-function -> ABA is not created
 
     # stack frame creation
