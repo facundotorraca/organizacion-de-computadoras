@@ -1,4 +1,5 @@
 #include <sys/regdef.h>
+#include "mergesortrec.S"
 #include "mymalloc.S"
 
 .text
