@@ -38,10 +38,6 @@ _merge_sort_rec:
     bge a2, a3, _return_ms_rec # if (L >= R) return
     nop
 
-    li a0, 1
-    jal print_int
-    lw a0, 40(fp)
-
     #calculates the middle of the array
     subu t0, a3, a2     # t0 <-- R - L
     srl t0, t0, 1       # t0 <-- t0 / 2
