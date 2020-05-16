@@ -13,7 +13,7 @@ merge:
     # a3 -> right index (R)
 
     # fp -> stack begin
-    # 24 -> stack size
+    # 32 -> stack size
     # ra -> retunr addr
     .frame fp, 32, ra  # 16 -> SRA | 16 -> LTA
     # leaf-function -> ABA is not created
@@ -67,14 +67,14 @@ while_lr:               # while (i < l_size && j < r_size)
     bge t3, t1, end_lr  # if (i >= l_size) jump to end_lr
     bge t4, t2, end_lr  # if (j >= r_size) jump to end_lr
 
-    addiu t3, a2, t3    # t3 <-- L + i | index
-    addiu t4, t0, t4    # t4 <-- m + j
+    addu t3, a2, t3    # t3 <-- L + i | index
+    addu t4, t0, t4    # t4 <-- m + j
     addiu t4, t4, 1     # t4 <-- m + j + 1 | index
 
     sll t3, t3, 2       # t3 <-- (t3 * 4) | memory pos
     sll t4, t4, 2       # t4 <-- (t4 * 4) | memory pos
 
-    addiu t5, t3, a0    # t5 <-- &p[l + i] | memory pos
+    addu t5, t3, a0    # t5 <-- &p[l + i] | memory pos
     lw t5, t5           # t5 <-- p[l + i]  | value
 
     addiu t6, t4, a0    # t6 <-- &p[m + 1 + j] | memory pos
@@ -84,7 +84,7 @@ while_lr:               # while (i < l_size && j < r_size)
 
     lw t7, 8(fp)        # t7 <-- k
     sll t7, t7, 2       # t7 <-- (k*4)
-    addiu t7, a1, t7    # t7 <-- t + (k*4) = &t[k] | memory pos
+    addu t7, a1, t7    # t7 <-- t + (k*4) = &t[k] | memory pos
     sw t5, t7           # t[k] = p[l + i]
 
     lw t7, 0(fp)        # t7 <-- i
@@ -98,7 +98,7 @@ else_lr:
 
     lw t7, 8(fp)        # t7 <-- k
     sll t7, t7, 2       # t7 <-- (k*4)
-    addiu t7, a1, t7    # t7 <-- t + (k*4) = &t[k] | memory pos
+    addu t7, a1, t7    # t7 <-- t + (k*4) = &t[k] | memory pos
     sw t6, t7           # t[k] = p[m + 1 + j]
 
     lw t7, 4(fp)        # t7 <-- j
@@ -133,7 +133,7 @@ while_l:                # while (i < l_size)
 
     lw t7, 8(fp)        # t7 <-- k
     sll t7, t7, 2       # t7 <-- (k*4)
-    addiu t7, a1, t7    # t7 <-- t + (k*4) = &t[k] | mem_pos
+    addu t7, a1, t7    # t7 <-- t + (k*4) = &t[k] | mem_pos
     sw t5, t7           # t[k] = p[l + i]
 
     lw t3, 0(fp)        # t3 <-- i
@@ -158,15 +158,15 @@ while_r:                # while (j < r_size)
     lw t4, 4(fp)        # t4 <-- j
     bge t4, t2, end_r   # if (j >= r_size) jump to end_r
 
-    addiu t4, t0, t4    # t4 <--  m + j
+    addu t4, t0, t4    # t4 <--  m + j
     addiu t4, t4, 1     # t4 <--  m + j + 1 | index
     sll t4, t4, 2       # t4 <-- (t4 * 4) | mem_pos
-    addiu t6, t7, a0    # t6 <-- &p[m + j + 1] | mem_pos
+    addu t6, t7, a0    # t6 <-- &p[m + j + 1] | mem_pos
     lw t6, t6           # t6 <-- p[m + j + 1] | value
 
     lw t7, 8(fp)        # t7 <-- k
     sll t7, t7, 2       # t7 <-- (k*4)
-    addiu t7, a1, t7    # t7 <-- t + (k*4) = &t[k] | mem_pos
+    addu t7, a1, t7    # t7 <-- t + (k*4) = &t[k] | mem_pos
     sw t6, t7           # t[k] = p[m + j + 1]
 
     lw t4, 4(fp)        # t7 <-- j
@@ -193,10 +193,10 @@ end_r:
 for:
     blt t3, t4, _return # for (i = l; i < k; i++)
     sll t5, t4, 2       # t5 <-- (i*4)
-    addiu t6, t5, a1    # t6 <-- &t[i] | mem_pos
+    addu t6, t5, a1    # t6 <-- &t[i] | mem_pos
     lw t6, t6           # t6 <-- t[i] | value
 
-    addiu t7, t5, a0    # t7 <-- &p[i] | mem_pos
+    addu t7, t5, a0    # t7 <-- &p[i] | mem_pos
     sw  t6, t7          # p[i] = t[i];
 
     addiu t4, t4, 1     # t4 <-- t4 + 1
