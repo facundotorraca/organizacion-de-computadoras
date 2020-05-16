@@ -50,7 +50,6 @@ void _merge(int p[], int t[], int l, int r) {
 }
 */
 
-/*
 void _merge_sort_rec(int p[], int t[], int l, int r) {
 	if (l < r) {
 		//middle of the vector (p)
@@ -62,14 +61,8 @@ void _merge_sort_rec(int p[], int t[], int l, int r) {
 		_merge(p, t, l, r);
 	}
 }
-*/
 
-/*
 extern void merge(int p[], int t[], int l, int r);
-*/
-
-extern void _merge_sort_rec(int p[], int t[], int l, int r);
-
 
 // Receives a pointer to the array to be sorted (p)
 // and an integer with the size of the array (size).
