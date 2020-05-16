@@ -17,6 +17,9 @@ _merge_sort_rec:
     # 40 -> stack size
     # ra -> retunr addr
     .frame fp, 40, ra   # 16 -> SRA | 8 -> LTA | 16 -> ABA
+    .set noreorder
+    .cpload t9
+    .set reorder
 
     # stack frame creation
     subu sp, sp, 40     # callee stack -> [sp, sp + 40]
