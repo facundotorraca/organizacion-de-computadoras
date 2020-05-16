@@ -7,8 +7,6 @@
 .globl merge_sort
 .ent merge_sort
 
-// HACER MALLOC DE AUX_PTR Y GUARDARLO EN 16(SP)
-
 #-----------------------------MERGE-SORT--------------------------------#
 merge_sort:
     # a0 -> array pointer
