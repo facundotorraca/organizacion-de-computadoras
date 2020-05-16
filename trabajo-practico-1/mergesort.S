@@ -19,17 +19,19 @@ merge_sort:
 
     # stack frame creation
     subu sp, sp, 40		# callee stack -> [sp, sp + 40]
+    #.cprestore 24	    # save gp in (24 + sp) | callee stack
 
     # fill ABA caller
                         # a3 reserved area     | caller stack
                       	# a2 reserved area     | caller stack
     sw a1, 44(sp)      	# save a1 in (44 + sp) | caller stack
+    sw a0, 40(sp)       # save a1 in (40 + sp) | caller stack
 
     # saved register area (SRA)
                       	# padding in (36 + sp) | callee stack
 	sw ra, 32(sp)	    # save ra in (32 + sp) | callee stack
 	sw fp, 28(sp)	    # save fp in (28 + sp) | callee stack
-    .cprestore 24	    # save gp in (24 + sp) | callee stack
+
 
     move fp, sp         # fp = sp
 
@@ -37,10 +39,11 @@ merge_sort:
                         # padding stack[sp + 20]
     sll a0, a1, 2       # a0 = array size * 4 (bytes)
     jal mymalloc        # call void* mymalloc(size_t), return value stored in v0
-    sw v0, 16(sp)       # aux_array saved in LTA
+    sw v0, 16(fp)       # aux_array saved in LTA
 
     lw a0, 40(fp)       # retrieve a0 from ABA - a0 = stack[40 + fp]
     lw a1, 44(fp)       # retrieve a1 from ABA - a1 = stack[44 + fp]
+
     subu t1, a1, 1      # calculate right index (t1 = size - 1)
 
     move a0, a0         # redundant (a0 = array pointer (P))
@@ -53,7 +56,7 @@ merge_sort:
 
     jal _merge_sort_rec
 
-    lw a0, 16(sp)       # load aux_array in a0
+    lw a0, 16(fp)       # load aux_array in a0
     jal myfree          # free memory requested by aux_array
 
     la  t0, _return_ms  # t0 = _return_ms address
@@ -70,10 +73,11 @@ _merge_sort_rec:
     # fp -> stack begin
     # 40 -> stack size
     # ra -> retunr addr
-    #.frame fp, 40, ra  # 16 -> SRA | 8 -> LTA | 16 -> ABA
+    .frame fp, 40, ra   # 16 -> SRA | 8 -> LTA | 16 -> ABA
 
     # stack frame creation
     subu sp, sp, 40     # callee stack -> [sp, sp + 40]
+    .cprestore 24       # save gp in (24 + sp) | callee stack
 
     # fill ABA caller
     sw a3, 52(sp)       # save a3 in (52 + sp) | caller stack
@@ -85,7 +89,6 @@ _merge_sort_rec:
                         # padding in (36 + sp) | callee stack
     sw ra, 32(sp)       # save ra in (32 + sp) | callee stack
     sw fp, 28(sp)       # save fp in (28 + sp) | callee stack
-    .cprestore 24       # save gp in (24 + sp) | callee stack
 
 	move fp, sp         # fp = sp
 
