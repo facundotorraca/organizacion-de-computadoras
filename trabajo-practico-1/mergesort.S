@@ -24,7 +24,6 @@ merge_sort:
                         # a3 reserved area     | caller stack
                       	# a2 reserved area     | caller stack
     sw a1, 44(sp)      	# save a1 in (44 + sp) | caller stack
-    sw a0, 40(sp)      	# save a0 in (40 + sp) | caller stack
 
     # saved register area (SRA)
                       	# padding in (36 + sp) | callee stack
@@ -71,7 +70,7 @@ _merge_sort_rec:
     # fp -> stack begin
     # 40 -> stack size
     # ra -> retunr addr
-    .frame fp, 40, ra  # 16 -> SRA | 8 -> LTA | 16 -> ABA
+    #.frame fp, 40, ra  # 16 -> SRA | 8 -> LTA | 16 -> ABA
 
     # stack frame creation
     subu sp, sp, 40     # callee stack -> [sp, sp + 40]
