@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <sys/types.h>
-#include <mymalloc.h>
+#include "mymalloc.h"
 
 int
 main(int argc, char * const argv[])
