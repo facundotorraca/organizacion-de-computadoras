@@ -19,7 +19,7 @@ merge_sort:
 
     # stack frame creation
     subu sp, sp, 40		# callee stack -> [sp, sp + 40]
-    .cprestore 24	    # save gp in (24 + sp) | callee stack
+    #.cprestore 24	    # save gp in (24 + sp) | callee stack
 
     # fill ABA caller
                         # a3 reserved area     | caller stack
