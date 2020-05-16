@@ -77,7 +77,7 @@ while_lr:               # while (i < l_size && j < r_size)
     addu t5, t3, a0    # t5 <-- &p[l + i] | memory pos
     lw t5, t5           # t5 <-- p[l + i]  | value
 
-    addiu t6, t4, a0    # t6 <-- &p[m + 1 + j] | memory pos
+    addu t6, t4, a0    # t6 <-- &p[m + 1 + j] | memory pos
     lw t6, t6           # t6 <-- p[m + 1 + j]  | value
 
     blt t6, t5, else_lr # if (p[m + 1 + j] < p[l + i] ) jump to else_lr
@@ -126,9 +126,9 @@ while_l:                # while (i < l_size)
     lw t3, 0(fp)        # t3 <-- i
     bge t3, t1, end_l   # if (i < l_size) jump to end_l
 
-    addiu t3, t3, a2    # t3 <-- L + i
+    addu t3, t3, a2    # t3 <-- L + i
     sll t3, t3, 2       # t3 <-- (t3 * 4)  | memory pos
-    addiu t5, t3, a0    # t5 <-- &p[l + i] | memory pos
+    addu t5, t3, a0    # t5 <-- &p[l + i] | memory pos
     lw t5, t5           # t5 <-- p[l + i]  | value
 
     lw t7, 8(fp)        # t7 <-- k
