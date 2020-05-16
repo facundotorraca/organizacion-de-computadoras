@@ -23,8 +23,8 @@ main(int argc, char * const argv[])
 		printf(" Writing ...");
 		fflush(stdout);
 		for (j = 0; j < i; ++j)
-			p[j] = 0xff;
-		printf(" Ok.");
+			p[j] = 0x39;
+		printf(" Ok.\n");
 
 		printf(" Freeing memory ...");
 		fflush(stdout);
