@@ -1,5 +1,4 @@
 #include <sys/regdef.h>
-#include "mymalloc.S"
 
 .text
 .align 2

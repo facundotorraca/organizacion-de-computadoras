@@ -1,5 +1,6 @@
 #include <sys/regdef.h>
 #include "mymalloc.S"
+#include "merge.S"
 
 .text
 .align 2
@@ -37,13 +38,16 @@ merge_sort:
 
     # local and temporary area (LTA)
     # padding stack[sp + 20]
-    # sw PTR_AUX, 16(sp)
+    sll a0, a1, 2       # t0 = array size * 4 (bytes)
+    jal mymalloc        # call void* mymalloc(size_t), return value stored in v0
+    sw v0, 16(sp)       # aux_array saved in LTA
+
 
     lw a0, 40(fp)       # retrieve a0 from ABA - a0 = stack[40 + fp]
     lw a1, 44(fp)       # retrieve a1 from ABA - a1 = stack[44 + fp]
     subu t1, a1, 1      # calculate right index (t1 = size - 1)
 
-    move a0, a0         # redundat (a0 = array pointer (P))
+    move a0, a0         # redundant (a0 = array pointer (P))
     move a1, t0         # a1 = t0 = merge aux array pointer (T)
     move a2, zero       # a2 = left index (L) = 0
     move a3, t1         # a3 = t1 = right index (R) = size - 1
@@ -52,6 +56,9 @@ merge_sort:
     # reserved 16 bytes for callee
 
     jal _merge_sort_rec
+
+    lw a0, 16(sp)       # load aux_array in a0
+    jal myfree          # free memory requested by aux_array
 
     la  t0, _return_ms  # t0 = _return_ms address
     jr t0               # jump to _ms address
@@ -84,7 +91,7 @@ _merge_sort_rec:
     sw fp, 28(sp)       # save fp in (28 + sp) | callee stack
     .cprestore 24       # save gp in (24 + sp) | callee stack
 
-		move fp, sp         # fp = sp
+	move fp, sp         # fp = sp
 
     #calculates the middle of the array
     subu t0, a3, a2     # t0 <-- R - L

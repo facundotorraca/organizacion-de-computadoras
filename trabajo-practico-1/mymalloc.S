@@ -1,4 +1,4 @@
-#include <regdef.h>
+#include <sys/regdef.h>
 #include <syscall.h>
 #include <asm/mman.h>
 
