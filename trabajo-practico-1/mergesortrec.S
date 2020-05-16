@@ -35,8 +35,8 @@ _merge_sort_rec:
     sw a1, 44(fp)       # save a1 in (44 + sp) | caller stack
     sw a0, 40(fp)       # save a0 in (40 + sp) | caller stack
 
-    la t0, _return_ms_rec
-    bge a2, a3, t0      # if (L >= R) return
+    bge a2, a3, _return_ms_rec # if (L >= R) return
+    nop
 
     #calculates the middle of the array
     subu t0, a3, a2     # t0 <-- R - L
