@@ -129,7 +129,7 @@ end_lr:
 while_l:                # while (i < l_size)
 
     lw t3, 0(fp)        # t3 <-- i
-    bge t3, t1, end_l   # if (i < l_size) jump to end_l
+    bge t3, t1, end_l   # if (i >= l_size) jump to end_l
 
     addu t3, t3, a2     # t3 <-- L + i
     sll t3, t3, 2       # t3 <-- (t3 * 4)  | memory pos
@@ -196,7 +196,7 @@ end_r:
     move t4, a2         # t4 <-- i = L
 
 for:
-    blt t3, t4, _return # for (i = l; i < k; i++)
+    ble t3, t4, _return # for (i = l; i < k; i++)
     sll t5, t4, 2       # t5 <-- (i*4)
     addu t6, t5, a1     # t6 <-- &t[i] | mem_pos
     lw t6, 0(t6)        # t6 <-- t[i] | value
