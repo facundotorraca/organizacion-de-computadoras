@@ -38,7 +38,7 @@ merge_sort:
 
     # local and temporary area (LTA)
     # padding stack[sp + 20]
-    sll a0, a1, 2       # t0 = array size * 4 (bytes)
+    sll t0, a1, 2       # t0 = array size * 4 (bytes)
     jal mymalloc        # call void* mymalloc(size_t), return value stored in v0
     sw v0, 16(sp)       # aux_array saved in LTA
 
@@ -77,7 +77,7 @@ _merge_sort_rec:
     .frame fp, 40, ra  # 16 -> SRA | 8 -> LTA | 16 -> ABA
 
     # stack frame creation
-    subu sp, sp, 40  # callee stack -> [sp, sp + 40]
+    subu sp, sp, 40     # callee stack -> [sp, sp + 40]
 
     # fill ABA caller
     sw a3, 52(sp)       # save a3 in (52 + sp) | caller stack
@@ -135,7 +135,7 @@ _merge_sort_rec:
     la  t0, _return_ms  # t0 = _return_ms address
     jr t0               # jump to _ms address
 #-----------------------------------------------------------------------#
-    
+
 #-------------------------------RETURN----------------------------------#
 _return_ms:
     # retreive registers from SRA
@@ -147,4 +147,3 @@ _return_ms:
 #-----------------------------------------------------------------------#
 
 .end merge_sort
-
