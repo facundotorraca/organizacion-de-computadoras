@@ -38,17 +38,16 @@ merge_sort:
 
     # local and temporary area (LTA)
                         # padding stack[sp + 20]
-    sll a0, a1, 2       # t0 = array size * 4 (bytes)
+    sll a0, a1, 2       # a0 = array size * 4 (bytes)
     jal mymalloc        # call void* mymalloc(size_t), return value stored in v0
     sw v0, 16(sp)       # aux_array saved in LTA
-
 
     lw a0, 40(fp)       # retrieve a0 from ABA - a0 = stack[40 + fp]
     lw a1, 44(fp)       # retrieve a1 from ABA - a1 = stack[44 + fp]
     subu t1, a1, 1      # calculate right index (t1 = size - 1)
 
     move a0, a0         # redundant (a0 = array pointer (P))
-    move a1, t0         # a1 = t0 = merge aux array pointer (T)
+    move a1, v0         # a1 = v0 = merge aux array pointer (T)
     move a2, zero       # a2 = left index (L) = 0
     move a3, t1         # a3 = t1 = right index (R) = size - 1
 
