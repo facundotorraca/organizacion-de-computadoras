@@ -2,9 +2,9 @@
 
 .text
 .align 2
+
 .ent merge
 .globl merge
-
 #--------------------------------MERGE----------------------------------#
 merge:
     # a0 -> array pointer (P)
