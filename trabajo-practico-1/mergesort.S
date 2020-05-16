@@ -145,3 +145,6 @@ _return_ms:
     addiu sp, sp, 40    # increment stack pointer
     jr	ra              # jump to return address
 #-----------------------------------------------------------------------#
+
+.end merge_sort
+

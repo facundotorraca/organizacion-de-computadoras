@@ -214,3 +214,6 @@ _return:
     addiu sp, sp, 32    # increment stack pointer
     jr	ra              # jump to return address
 #--------------------------------------------------------#
+
+.end merge
+
