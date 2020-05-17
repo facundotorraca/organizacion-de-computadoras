@@ -18,7 +18,7 @@ merge_sort:
     .frame fp, 40, ra	# 16 -> SRA | 8 -> LTA | 16 -> ABA
 
     # stack frame creation
-    subu sp, sp, 40		# callee stack -> [sp, sp + 40]
+    subu sp, sp, 40     # callee stack -> [sp, sp + 40]
 
     # saved register area (SRA)
                         # padding in (36 + sp) | callee stack
