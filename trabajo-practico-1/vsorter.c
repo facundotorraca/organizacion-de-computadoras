@@ -126,7 +126,7 @@ void print_sorted_vec(FILE* o_file, vector_t* vector) {
 
 /*--------------------exectuion-modes--------------------*/
 int help() {
-    printf("Usage:\n")
+    printf("Usage:\n");
     printf("\ttp1 -h\n");
     printf("\ttp1 -V\n");
     printf("\ttp1 -i in_file -o out_file\n");
