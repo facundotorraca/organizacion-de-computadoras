@@ -153,7 +153,7 @@ int main(int argc, char* const argv[]) {
 
     int mode = get_exec_mode(argc, argv);
     if (mode == ERROR) {
-        fprintf(stderr,"unrecognized command line option");
+        fprintf(stderr,"unrecognized command line option\n");
         return ERROR;
     }
 
