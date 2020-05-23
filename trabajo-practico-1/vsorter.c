@@ -9,6 +9,7 @@
 
 #define ERROR -1
 #define SUCCESS 0
+
 #define STD_FILE "-"
 #define DELIMITER " "
 
@@ -105,7 +106,7 @@ int read_vector(FILE* i_file, vector_t* vector) {
     ssize_t bytes_read = getline(&buffer, &size_buff, i_file);
 
     if (bytes_read == ERROR || bytes_read == 0) {
-        perror(NULL); //print errno is stderr
+        if (bytes_read == ERROR) perror(NULL);
         free(buffer);
         return ERROR;
     }
@@ -125,12 +126,23 @@ void print_sorted_vec(FILE* o_file, vector_t* vector) {
 
 /*--------------------exectuion-modes--------------------*/
 int help() {
-    printf("ACA VA LA AYUDA\n");
+    printf("Usage:\n");
+    printf("\ttp1 -h\n");
+    printf("\ttp1 -V\n");
+    printf("\ttp1 -i in_file -o out_file\n");
+    printf("Options:\n");
+    printf("\t-V, --version Print version and quit.\n");
+    printf("\t-h, --help Print this information and quit.\n");
+    printf("\t-i, --input Specify input stream/file, '-' for stdin\n");
+    printf("\t-o, --output Specify output stream/file, '-' for stdout.\n");
+    printf("Examples:\n");
+    printf("\ttp1 < in.txt > out.txt\n");
+    printf("\tcat in.txt | tp1 -i - > out.txt\n");
     return SUCCESS;
 }
 
 int version() {
-    printf("ACA VA LA VERSION\n");
+    printf("vsorter version: 1.0.0\n");
     return SUCCESS;
 }
 
@@ -195,8 +207,3 @@ int main(int argc, char* const argv[]) {
     if (!output_is_std) fclose(o_file);
     return SUCCESS;
 }
-
-
-
-
-//PUTO EL QUE LLEGO HASTA ACA
