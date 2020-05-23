@@ -50,13 +50,13 @@ bool is_version_flag(const char* flag) {
 }
 
 bool is_input_flag(const char* flag) {
-    return (strcmp(flag_1, INPUT_FLAG) == 0 ||
-            strcmp(flag_1, INPUT_FLAG_EXT) == 0);
+    return (strcmp(flag, INPUT_FLAG) == 0 ||
+            strcmp(flag, INPUT_FLAG_EXT) == 0);
 }
 
 bool is_output_flag(const char* flag) {
-    return (strcmp(flag_2, OUTPUT_FLAG) == 0 ||
-            strcmp(flag_2, OUTPUT_FLAG_EXT) == 0);
+    return (strcmp(flag, OUTPUT_FLAG) == 0 ||
+            strcmp(flag, OUTPUT_FLAG_EXT) == 0);
 }
 /*-------------------------------------------------------*/
 
@@ -211,7 +211,7 @@ int main(int argc, char* const argv[]) {
         }
         case O_MODE: {
             o_filename = argv[2];
-            break
+            break;
         }
         case IO_MODE: {
             i_filename = argv[2];
