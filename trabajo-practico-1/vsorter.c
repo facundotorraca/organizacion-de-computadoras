@@ -106,7 +106,7 @@ int get_5args_mode(char* const argv[]) {
 
 int get_exec_mode(int argc, char* const argv[]) {
     switch (argc) {
-        case 0:
+        case 1:
             return STD_MODE;
         case 2:
             return get_2args_mode(argv);
@@ -199,6 +199,8 @@ int main(int argc, char* const argv[]) {
     char* o_filename = NULL; FILE* o_file = stdout;
 
     int mode = get_exec_mode(argc, argv);
+
+    printf("Modo: %i\n", mode);
 
     switch (mode) {
         case V_MODE:
