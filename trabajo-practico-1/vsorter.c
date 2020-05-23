@@ -195,8 +195,8 @@ void sort(FILE* i_file, FILE* o_file) {
 /*-------------------------------------------------------*/
 
 int main(int argc, char* const argv[]) {
-    char* i_filename = NULL; FILE* i_file = stdin;
-    char* o_filename = NULL; FILE* o_file = stdout;
+    char* i_filename = STD_FILE; FILE* i_file = stdin;
+    char* o_filename = STD_FILE; FILE* o_file = stdout;
 
     int mode = get_exec_mode(argc, argv);
 
