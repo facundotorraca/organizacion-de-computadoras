@@ -16,8 +16,10 @@
 /*-----------------------exec-modes----------------------*/
 #define H_MODE 1
 #define V_MODE 2
-#define IO_MODE 3
-#define OI_MODE 4
+#define I_MODE 3
+#define O_MODE 4
+#define IO_MODE 5
+#define OI_MODE 6
 /*-------------------------------------------------------*/
 
 /*------------------------flags--------------------------*/
@@ -34,21 +36,50 @@
 #define OUTPUT_FLAG_EXT "--output"
 /*-------------------------------------------------------*/
 
+
+/*----------------------get-flags------------------------*/
+bool is_help_flag(const char* flag) {
+    return (strcmp(flag, HELP_FLAG) == 0 ||
+            strcmp(flag, HELP_FLAG_EXT) == 0);
+}
+
+bool is_version_flag(const char* flag) {
+    return (strcmp(flag, VERSION_FLAG) == 0 ||
+            strcmp(flag, VERSION_FLAG_EXT) == 0);
+}
+
+bool is_input_flag(const char* flag) {
+    return (strcmp(flag_1, INPUT_FLAG) == 0 ||
+            strcmp(flag_1, INPUT_FLAG_EXT) == 0);
+}
+
+bool is_output_flag(const char* flag) {
+    return (strcmp(flag_2, OUTPUT_FLAG) == 0 ||
+            strcmp(flag_2, OUTPUT_FLAG_EXT) == 0);
+}
+/*-------------------------------------------------------*/
+
 /*-----------------get-exectuion-modes-------------------*/
 int get_2args_mode(char* const argv[]) {
     const char* flag = argv[1];
 
-    bool help_flag = (strcmp(flag, HELP_FLAG) == 0 ||
-                      strcmp(flag, HELP_FLAG_EXT) == 0);
-
-    if (help_flag)
+    if (is_help_flag(flag))
         return H_MODE;
 
-    bool version_flag = (strcmp(flag, VERSION_FLAG) == 0 ||
-                         strcmp(flag, VERSION_FLAG_EXT) == 0);
-
-    if (version_flag)
+    if (is_version_flag(flag))
         return V_MODE;
+
+    return ERROR;
+}
+
+int get_3args_mode(char* const argv[]) {
+    const char* flag = argv[1];
+
+    if (is_input_flag(flag))
+        return I_MODE;
+
+    if (is_output_flag(flag))
+        return O_MODE;
 
     return ERROR;
 }
@@ -57,31 +88,34 @@ int get_5args_mode(char* const argv[]) {
     const char* flag_1 = argv[1];
     const char* flag_2 = argv[3];
 
-    bool input_flag_frt = (strcmp(flag_1, INPUT_FLAG) == 0 ||
-                           strcmp(flag_1, INPUT_FLAG_EXT) == 0);
+    bool input_flag_frt = is_input_flag(flag_1);
+    bool input_flag_scd = is_input_flag(flag_2);
 
-    bool input_flag_scd = (strcmp(flag_2, INPUT_FLAG) == 0 ||
-                           strcmp(flag_2, INPUT_FLAG_EXT) == 0);
-
-    bool output_flag_frt = (strcmp(flag_1, OUTPUT_FLAG) == 0 ||
-                            strcmp(flag_1, OUTPUT_FLAG_EXT) == 0);
-
-    bool output_flag_scd = (strcmp(flag_2, OUTPUT_FLAG) == 0 ||
-                            strcmp(flag_2, OUTPUT_FLAG_EXT) == 0);
+    bool output_flag_frt = is_output_flag(flag_1);
+    bool output_flag_scd = is_output_flag(flag_2);
 
     if (input_flag_frt && output_flag_scd)
         return IO_MODE;
+
     if (output_flag_frt && input_flag_scd)
         return OI_MODE;
+
     return ERROR;
 }
 
 int get_exec_mode(int argc, char* const argv[]) {
-    if (argc == 2)
-        return get_2args_mode(argv);
-    if (argc == 5)
-        return get_5args_mode(argv);
-    return ERROR;
+    switch (argc) {
+        case 0:
+            return STD_MODE;
+        case 2:
+            return get_2args_mode(argv);
+        case 3:
+            return get_3args_mode(argv);
+        case 5:
+            return get_5args_mode(argv);
+        default:
+            return ERROR;
+    }
 }
 /*-------------------------------------------------------*/
 
@@ -164,22 +198,34 @@ int main(int argc, char* const argv[]) {
     char* o_filename = NULL; FILE* o_file = stdout;
 
     int mode = get_exec_mode(argc, argv);
-    if (mode == ERROR) {
-        fprintf(stderr,"unrecognized command line option");
-        return ERROR;
-    }
 
-    if (mode == V_MODE)
-        return version();
-    if (mode == H_MODE)
-        return help();
-
-    if (mode == IO_MODE) {
-        i_filename = argv[2];
-        o_filename = argv[4];
-    } else /*mode == OI_MODE*/ {
-        i_filename = argv[4];
-        o_filename = argv[2];
+    switch (mode) {
+        case V_MODE:
+            return version();
+        case H_MODE:
+            return help();
+        case I_MODE: {
+            i_filename = argv[2];
+            break;
+        }
+        case O_MODE: {
+            o_filename = argv[2];
+            break
+        }
+        case IO_MODE: {
+            i_filename = argv[2];
+            o_filename = argv[4];
+            break;
+        }
+        case OI_MODE: {
+            i_filename = argv[4];
+            o_filename = argv[2];
+            break;
+        }
+        default: {
+            fprintf(stderr,"unrecognized command line option");
+            return ERROR;
+        }
     }
 
     bool input_is_std = (strcmp(i_filename, STD_FILE) == 0);
