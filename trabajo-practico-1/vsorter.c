@@ -200,8 +200,6 @@ int main(int argc, char* const argv[]) {
 
     int mode = get_exec_mode(argc, argv);
 
-    printf("Modo: %i\n", mode);
-
     switch (mode) {
         case V_MODE:
             return version();
