@@ -153,8 +153,11 @@ int read_vector(FILE* i_file, vector_t* vector) {
 }
 
 void print_sorted_vec(FILE* o_file, vector_t* vector) {
-    for (size_t i = 0; i < vector->size; i++)
-        fprintf(o_file, "%i ", vector->array[i]);
+    if (vector) {
+        for (size_t i = 0; i < vector->size; i++)
+            fprintf(o_file, "%i ", vector->array[i]);
+    }
+    
     fprintf(o_file,"\n");
 }
 /*-------------------------------------------------------*/
@@ -186,8 +189,11 @@ void sort(FILE* i_file, FILE* o_file) {
     vector_init(&vector);
 
     while (read_vector(i_file, &vector) == SUCCESS) {
-        merge_sort(vector.array, vector.size);
-        print_sorted_vec(o_file, &vector);
+        if (!vector_empty(&vector)) {
+            merge_sort(vector.array, vector.size);
+            print_sorted_vec(o_file, &vector);
+        } else
+            print_sorted_vec(o_file,  NULL);
     }
 
     vector_destroy(&vector);

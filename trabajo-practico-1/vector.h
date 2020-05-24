@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define ERROR -1
 #define SUCCESS 0
@@ -20,6 +21,10 @@ int vector_init(vector_t* self) {
     self->max_size = INIT_SIZE;
     self->size = 0;
     return SUCCESS;
+}
+
+bool vector_empty(vector_t* self) {
+    return self->size == 0;
 }
 
 void vector_push(vector_t* self, int n) {
