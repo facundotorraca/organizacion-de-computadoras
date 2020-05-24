@@ -12,9 +12,9 @@
 
 #define STD_FILE "-"
 
-#define DELIMITER ' '
-#define ENDLINE '\n'
-#define NULLTER '\0'
+#define DELIMITER " "
+#define ENDLINE "\n"
+#define NULLTER "\0"
 
 /*-----------------------exec-modes----------------------*/
 #define H_MODE 1
@@ -127,7 +127,7 @@ int get_exec_mode(int argc, char* const argv[]) {
 
 /*-----------------auxiliary-functions-------------------*/
 bool is_regular_char(char c) {
-    return (c != DELIMITER) && (c != ENDLINE) && (c != NULLTER);
+    return c != DELIMITER && c != ENDLINE && c != NULLTER;
 }
 
 int parse_vec_buffer(char* buffer, vector_t* vector) {
@@ -135,9 +135,11 @@ int parse_vec_buffer(char* buffer, vector_t* vector) {
 
     size_t lenbuf = strlen(buffer);
 
-    for (size_t i = 0; i < lenbuf + 1; i++) {
-        if (is_regular_char(buffer[i]))
-            vector_push(vector, strtol(str_num, NULL, 10));
+    char* str_num = strtok (buffer, DELIMITER);
+    while (str_num != NULL) {
+        int number = strtol(str_num, NULL, 10);
+        vector_push(vector, number);
+        str_num = strtok (NULL, DELIMITER);
     }
 
     return SUCCESS;
