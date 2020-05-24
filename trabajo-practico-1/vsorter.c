@@ -11,7 +11,10 @@
 #define SUCCESS 0
 
 #define STD_FILE "-"
-#define DELIMITER " "
+
+#define DELIMITER ' '
+#define ENDLINE '\n'
+#define NULLTER '\0'
 
 /*-----------------------exec-modes----------------------*/
 #define H_MODE 1
@@ -59,6 +62,7 @@ bool is_output_flag(const char* flag) {
             strcmp(flag, OUTPUT_FLAG_EXT) == 0);
 }
 /*-------------------------------------------------------*/
+
 
 /*-----------------get-exectuion-modes-------------------*/
 int get_2args_mode(char* const argv[]) {
@@ -120,15 +124,20 @@ int get_exec_mode(int argc, char* const argv[]) {
 }
 /*-------------------------------------------------------*/
 
+
 /*-----------------auxiliary-functions-------------------*/
+bool is_regular_char(char c) {
+    return (c != DELIMITER) && (c != ENDLINE) && (c != NULLTER);
+}
+
 int parse_vec_buffer(char* buffer, vector_t* vector) {
     vector_clear(vector);
 
-    char* str_num = strtok (buffer, DELIMITER);
-    while (str_num != NULL) {
-        int number = strtol(str_num, NULL, 10);
-        vector_push(vector, number);
-        str_num = strtok (NULL, DELIMITER);
+    size_t lenbuf = strlen(buffer);
+
+    for (size_t i = 0; i < lenbuf + 1; i++) {
+        if (is_regular_char(buffer[i]))
+            vector_push(vector, strtol(str_num, NULL, 10));
     }
 
     return SUCCESS;
@@ -157,10 +166,11 @@ void print_sorted_vec(FILE* o_file, vector_t* vector) {
         for (size_t i = 0; i < vector->size; i++)
             fprintf(o_file, "%i ", vector->array[i]);
     }
-    
+
     fprintf(o_file,"\n");
 }
 /*-------------------------------------------------------*/
+
 
 /*--------------------exectuion-modes--------------------*/
 int help() {
