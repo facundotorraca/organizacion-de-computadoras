@@ -128,8 +128,8 @@ int get_exec_mode(int argc, char* const argv[]) {
 /*-----------------auxiliary-functions-------------------*/
 void remove_endline(char* s) {
     size_t len = strlen(s);
-    if (s[len] == ENDLINE)
-        s[len] = NULLTER;
+    if (s[len - 1] == ENDLINE)
+        s[len - 1] = NULLTER;
 }
 
 int parse_vec_buffer(char* buffer, vector_t* vector) {
