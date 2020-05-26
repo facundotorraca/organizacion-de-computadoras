@@ -39,6 +39,9 @@ merge_sort:
     sll a0, a1, 2       # a0 = array size * 4 (bytes)
     jal mymalloc        # call void* mymalloc(size_t)
                         # return value stored in v0
+
+    beqz v0, _exit      # if mymalloc failed then v0=NULL and we call exit syscall
+
     sw v0, 16(fp)       # aux_array saved in LTA
 
     lw a0, 40(fp)       # retrieve a0 from ABA - a0 = stack[40 + fp]
@@ -67,6 +70,17 @@ _return_ms:
     lw	ra, 32(sp)
     addiu sp, sp, 40    # increment stack pointer
     jr	ra              # jump to return address
+#-------------------------------------------------#
+
+#-------------------EXIT_SYS---------------------#
+_exit:
+    # retreive registers from SRA
+    lw	gp, 24(sp)
+    lw	fp, 28(sp)
+    lw	ra, 32(sp)
+    addiu sp, sp, 40    # increment stack pointer
+    li  v0, 10          # Syscall exit = 10
+    syscall
 #-------------------------------------------------#
 
 .end merge_sort
