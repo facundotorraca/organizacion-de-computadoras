@@ -2,6 +2,9 @@
 #include "mergesortrec.S"
 #include "mymalloc.S"
 
+.data
+err_msg: .asciiz "Mymalloc error\n"
+
 .text
 .align 2
 
@@ -74,12 +77,20 @@ _return_ms:
 
 #-------------------EXIT_SYS---------------------#
 _exit:
+    #Write err_msg to stderr
+    li a0, 2            # a0 = stderr fd=2
+    li a1, err_msg      # a1 = err_msg
+    li a2, 15           # a2 = strlen(err_msg)
+    li v0, SYS_write    # Syscall write(2, err_msg, strlen(err_msg)
+    syscall
+
     # retreive registers from SRA
     lw	gp, 24(sp)
     lw	fp, 28(sp)
     lw	ra, 32(sp)
     addiu sp, sp, 40    # increment stack pointer
-    li  v0, 10          # Syscall exit = 10
+    li  a0, -1          # exit value = -1
+    li  v0, 17          # Syscall exit2 = 17
     syscall
 #-------------------------------------------------#
 
