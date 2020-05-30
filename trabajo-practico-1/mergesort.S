@@ -2,6 +2,9 @@
 #include "mergesortrec.S"
 #include "mymalloc.S"
 
+.data
+err_msg: .asciiz "Mymalloc error\n"
+
 .text
 .align 2
 
@@ -39,6 +42,9 @@ merge_sort:
     sll a0, a1, 2       # a0 = array size * 4 (bytes)
     jal mymalloc        # call void* mymalloc(size_t)
                         # return value stored in v0
+
+    beqz v0, _exit      # if mymalloc failed then v0=NULL and we call exit syscall
+
     sw v0, 16(fp)       # aux_array saved in LTA
 
     lw a0, 40(fp)       # retrieve a0 from ABA - a0 = stack[40 + fp]
@@ -67,6 +73,25 @@ _return_ms:
     lw	ra, 32(sp)
     addiu sp, sp, 40    # increment stack pointer
     jr	ra              # jump to return address
+#-------------------------------------------------#
+
+#-------------------EXIT_SYS---------------------#
+_exit:
+    #Write err_msg to stderr
+    li a0, 2            # a0 = stderr fd=2
+    li a1, err_msg      # a1 = err_msg
+    li a2, 15           # a2 = strlen(err_msg)
+    li v0, SYS_write    # Syscall write(2, err_msg, strlen(err_msg)
+    syscall
+
+    # retreive registers from SRA
+    lw	gp, 24(sp)
+    lw	fp, 28(sp)
+    lw	ra, 32(sp)
+    addiu sp, sp, 40    # increment stack pointer
+    li  a0, -1          # exit value = -1
+    li  v0, 17          # Syscall exit2 = 17
+    syscall
 #-------------------------------------------------#
 
 .end merge_sort
