@@ -225,6 +225,8 @@ int main(int argc, char* const argv[]) {
             return version();
         case H_MODE:
             return help();
+        case STD_MODE:
+            break;
         case I_MODE: {
             i_filename = argv[2];
             break;
