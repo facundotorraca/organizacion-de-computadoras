@@ -1,0 +1,148 @@
+
+c1: Direct Map
+64 bytes, y el tamaño de lı́nea (bloque) 16 bytes
+
+
+    L1D			 	L1I
++---------------+ 64 B 	+---------------+ 64 B
+|		|	|		|
++---------------+ 48 B	+---------------+ 48 B
+|		|	|		|
++---------------+ 32 B	+---------------+ 32 B		
+|		|	|		|
++---------------+ 16 B	+---------------+ 16 B
+|		|	|		|
++---------------+ 0 B	+---------------+ 0 B
+
+Tenemos en la cache 4 bloques y cada uno de estos bloques almacena 4 words (los cuales pueden ser instrucciones o datos, segun la cache)
+
+2 bits de offset para elegir el bloque y 2 bits de offset de word
+
+En este caso las direcciones de 32 bits se van a componer por:
+
+DM: | Tag      		|  Index  	 | Word offset | Byte offset |
+    31         		5                3             1             0
+
+Tag: [6..31]
+Idx: [4, 5]
+WOf: [2, 3]
+BOf: [0, 1]
+
+
+--------------------------------------------------------------------------------
+-- User-annotated source: /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b3.S
+--------------------------------------------------------------------------------
+Ir  I1mr ILmr Dr  D1mr DLmr Dw  D1mw DLmw 
+
+-- line 10 ----------------------------------------
+  .    .    .   .    .    .   .    .    .  
+  .    .    .   .    .    .   .    .    .  	.text
+  .    .    .   .    .    .   .    .    .  	.align	2
+  .    .    .   .    .    .   .    .    .  
+  .    .    .   .    .    .   .    .    .  	.globl	main
+  .    .    .   .    .    .   .    .    .  	.ent	main
+  .    .    .   .    .    .   .    .    .  main:
+  .    .    .   .    .    .   .    .    .  	.set	noreorder
+###############################################################################################
+  3    1    1   0    0    0   0    0    0  	.cpload	t9
+  .    .    .   .    .    .   .    .    .  	.set	nomacro
+  1    0    0   0    0    0   0    0    0  	addiu	sp, sp, -24
+
+Cuando entra al main la primera instruccion ejecutada es la expansion de cpload, que
+se expande a 3 instrucciones, en la primera de esas 3 tenemos un miss en cache y 
+debido a eso nos traemos esa instruccion y las siguientes 3 (es decir un bloque de 4 words).
+
+La segunda instruccion ejecutada es addiu sp, sp, -24 , lo cual no tiene
+miss de instruccion debido a que ya estaba cargada en el mismo bloque de cpload.
+
+###############################################################################################
+  1    1    1   0    0    0   1    1    1  	sw	fp, 20(sp)
+  1    0    0   0    0    0   0    0    0  	move	fp, sp
+  1    0    0   0    0    0   1    1    1  	.cprestore	0
+  .    +    .   .    +    .   .    +    .  
+
+Luego un sw fp, 20(sp) en el cual hay dos misses, uno es de lectura de 
+por no tener la instruccion sw (entonces cargaremos esta instruccion y las siguientes tres en un bloque de la cache). 
+y la otra es de escritura en la direccion de memoria de 20(sp) y se carga el bloque de datos que lo incluye.
+
+Como la siguiente instruccion es un load address de una direccion que no entra en un espacio
+de 16 bits entonces se separará en 2 y la primera de esas 2 será parte del bloque
+en el que esta la instruccion sw fp, 20(sp).
+
+###############################################################################################
+  2    1    1   1    1    1   0    0    0  	la	t0, aligned0
+  2    0    0   1    0    0   0    0    0  	la	t1, aligned1
+
+Ambas pseudo instrucciones de load address seran expandidas a 2 instrucciones y por
+lo tanto luego del primer miss que ocurrira en la segunda instruccion de las 2
+en las que se descompuso el "la t0, aligned0" se incluira el bloque que la incluye
+y a las 3 siguientes (que como la 4ta de estas es un "la t2, aligned2" que se descompone
+en 2 instrucciones reales entonces solo será incluida la primera de estas 2 en el bloque).
+
+----
+
+TODO: Vemos que aligned0 es un miss de lectura de dato (obvio) pero luego hay un skip de 8192 (resto 64 = 0, es decir que el siguiente aligned cae en el mismo bloque)
+      y al querer obtener la direccion de aligned1 DEBERIAMOS tener un miss de lectura de dato, 
+      sin embargo vemos que hay un hit. Esto se repite para aligned2.
+
+----
+
+       +             +             +
+###############################################################################################
+  2    1    1   1    0    0   0    0    0  	la	t2, aligned2
+  1    0    0   0    0    0   0    0    0  	li	t3, 256
+256    0    0 256  256  256   0    0    0  loop:	lw	t4, 0(t0)
+256    0    0 256  256  256   0    0    0  	lw	t5, 0(t1)
+
+Como fue mencionado el la t2, aligned2 se descompone en 2 instrucciones reales
+y sera la segunda la que no este en la cache, por lo tanto se guardara esta y
+las siguientes 3 (que incluyen la primera parte del loop).
+Ademas como todos los 3 bloques en los que esta incluido la totalidad del codigo del loop (9 words * 4 bytes = 36 bytes)
+entran en la cache de instrucciones habran en total 3 misses de instrucciones debidos 
+al loop en las 256 iteraciones.
+
+Tambien vemos que hay un miss de lectura de dato al querer obtener
+el contenido de la direccion guardada en t0 y tambien al querer
+obtener el contenido de la direccion guardada en t1 en cada iteracion del loop 
+y esto se debe a que el contenido de t0 y t1 (direcciones) son modificados a razon de sumarle
+4 en cada iteracion, por lo que en cada iteracion los punteros direccionaran
+lugares distintos de la memoria
+
+
+
+###############################################################################################
+256    1    1   0    0    0   0    0    0  	addu	t6, t5, t4
+256    0    0   0    0    0 256  256  256  	sw	t6, 0(t2)
+256    0    0   0    0    0   0    0    0  	addu	t0, t0, 4
+256    0    0   0    0    0   0    0    0  	addu	t1, t1, 4
+###############################################################################################
+256    1    1   0    0    0   0    0    0  	addu	t2, t2, 4
+256    0    0   0    0    0   0    0    0  	subu	t3, t3, 1
+256    0    0   0    0    0   0    0    0  	bnez	t3, loop
+  .    .    .   .    .    .   .    .    .  
+  .    .    .   .    .    .   .    .    .  	# Destruimos el stack frame antes de retornar de main().
+  .    .    .   .    .    .   .    .    .  	#
+256    0    0   0    0    0   0    0    0  	move	sp, fp
+###############################################################################################
+  1    1    1   1    1    1   0    0    0  	lw	fp, 20(sp)
+  1    0    0   0    0    0   0    0    0  	addiu	sp, sp, 24
+  .    .    .   .    .    .   .    .    .  
+  .    .    .   .    .    .   .    .    .  	# Para volver al sistema operativo cargamos un codigo de retorno nulo.
+  .    .    .   .    .    .   .    .    .  	#
+  1    0    0   0    0    0   0    0    0  	move	v0, zero
+  1    0    0   0    0    0   0    0    0  	jr	ra
+  .    .    .   .    .    .   .    .    .  	.end	main
+  .    .    .   .    .    .   .    .    .  
+  .    .    .   .    .    .   .    .    .  	.data
+  .    .    .   .    .    .   .    .    .  	.align	20
+  .    .    .   .    .    .   .    .    .  aligned0:
+  .    .    .   .    .    .   .    .    .  	.skip	8192
+  .    .    .   .    .    .   .    .    .  aligned1:
+  .    .    .   .    .    .   .    .    .  	.skip	8192
+-- line 56 ----------------------------------------
+
+--------------------------------------------------------------------------------
+Ir    I1mr ILmr Dr  D1mr DLmr Dw  D1mw DLmw 
+--------------------------------------------------------------------------------
+2,578    7    7 516  514  514 258  258  258  events annotated
+
