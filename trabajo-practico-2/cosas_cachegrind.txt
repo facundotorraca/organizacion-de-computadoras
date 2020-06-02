@@ -1,0 +1,17 @@
+Ir: Cantidad de referencias en el cache de instrucciones
+
+I1mr: Cantidad de misses de lectura en el cache de instrucciones 
+
+ILmr: Cantidad de misses de lectura en el cache de nivel 2 de instrucciones
+
+Dr: Cantidad de referencias de lectura al cache de datos
+
+D1mr: Cantidad de misses de lectura en el cache de datos
+
+DLmr: Cantidad de misses de lectura en el cache de nivel 2 de datos
+
+Dw: Cantidad de referencias de escritura al cache de datos
+
+D1mw: Cantidad de misses de escritura en el cache de datos
+
+DLmw: Cantidad de misses de Escritura en el cache de datos
