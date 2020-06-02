@@ -42,7 +42,7 @@ loop:	lw	t4, 0(t0)
 	lw	fp, 20(sp)
 	addiu	sp, sp, 24
 
-	# Para volver al sistema operativo cargamos un código de retorno nulo.
+	# Para volver al sistema operativo cargamos un codigo de retorno nulo.
 	#
 	move	v0, zero
 	jr	ra
@@ -56,3 +56,4 @@ aligned1:
 	.skip	8192
 aligned2:
 	.skip	8192
+

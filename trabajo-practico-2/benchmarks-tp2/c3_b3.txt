@@ -3,7 +3,7 @@ I1 cache:         64 B, 16 B, 4-way associative
 D1 cache:         64 B, 16 B, 4-way associative
 LL cache:         64 B, 16 B, 4-way associative
 Command:          /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b3
-Data file:        cachegrind.out.837
+Data file:        cachegrind.out.298
 Events recorded:  Ir I1mr ILmr Dr D1mr DLmr Dw D1mw DLmw
 Events shown:     Ir I1mr ILmr Dr D1mr DLmr Dw D1mw DLmw
 Event sort order: Ir I1mr ILmr Dr D1mr DLmr Dw D1mw DLmw
@@ -100,7 +100,7 @@ Ir  I1mr ILmr Dr  D1mr DLmr Dw  D1mw DLmw
   1    1    1   1    1    1   0    0    0  	lw	fp, 20(sp)
   1    0    0   0    0    0   0    0    0  	addiu	sp, sp, 24
   .    .    .   .    .    .   .    .    .  
-  .    .    .   .    .    .   .    .    .  	# Para volver al sistema operativo cargamos un código de retorno nulo.
+  .    .    .   .    .    .   .    .    .  	# Para volver al sistema operativo cargamos un codigo de retorno nulo.
   .    .    .   .    .    .   .    .    .  	#
   1    0    0   0    0    0   0    0    0  	move	v0, zero
   1    0    0   0    0    0   0    0    0  	jr	ra
