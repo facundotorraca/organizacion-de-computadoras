@@ -1,0 +1,412 @@
+    1  ls
+    2  ls -a
+    3  shutdown -now
+    4  poweroff
+    5  poweroff
+    6  dhclient
+    7  apt-get update
+    8  poweroff
+    9  dhclient
+   10  cd tp1_compus/
+   11  cd organizacion-de-computadoras/trabajo-practico-1/
+   12  git status
+   13  rm tp
+   14  git reset --hard origin/master
+   15  git pull
+   16  clear
+   17  clear
+   18  gcc -Wall -g -O0 -o tp vsorter.c vector.h mergesort.h mergesort.S
+   19  ./tp -i input.txt -o -
+   20  gdb tp
+   21  apt-get install valgrind
+   22  clear
+   23  valgrind ./tp -i input.txt -o -
+   24  poweroff
+   25  dhclient
+   26  clear
+   27  cd tp1_compus/
+   28  cd organizacion-de-computadoras/
+   29  cd trabajo-practico-1/
+   30  git pull
+   31  git pul
+   32  git pull
+   33  gcc -Wall -g -O0 -o tp mymalloc_test.c mymalloc.h mymalloc.S
+   34  git pull
+   35  gcc -Wall -g -O0 -o tp mymalloc_test.c mymalloc.h mymalloc.S
+   36  git pull
+   37  gcc -Wall -g -O0 -o tp mymalloc_test.c mymalloc.h mymalloc.S
+   38  ./tp
+   39  cd ..
+   40  git pull
+   41  cd factorial/
+   42  cd factorial.
+   43  gcc -Wall -g -O0 -o main.c factorial.c factorial.S
+   44  gcc -Wall -g -O0 -o tp main.c factorial.h factorial.S
+   45  git pull
+   46  gcc -Wall -g -O0 -o tp main.c factorial.h factorial.S
+   47  ./tp
+   48  git pull
+   49  gcc -Wall -g -O0 -o tp main.c factorial.h factorial.S
+   50  ./tp
+   51  ./tp 3
+   52  ./tp 6
+   53  ./tp 4
+   54  cd ..
+   55  git pull
+   56  cd trabajo-practico-1/
+   57  gcc -Wall -g -O0 -o tp vsorter.c mergesort.h mergesort.S
+   58  ./tp -i input.txt -o -
+   59  ./tp -i - -o -
+   60  ./tp -i input.txt -o -
+   61  poweroff
+   62  dhclient
+   63  apt-get install vim
+   64  ls
+   65  cd tp1_compus/
+   66  ls
+   67  cd organizacion-de-computadoras/
+   68  git reset --hard origin/master
+   69  git pull
+   70  ls
+   71  cd trabajo-practico-1/
+   72  gcc -Wall -g -o mergesort vsorter.c mergesort.S
+   73  ./mergesort -h
+   74  ./mergesort --help
+   75  ./mergesort -v
+   76  ./mergesort --version
+   77  ./mergesort --version
+   78  ./mergesort --v
+   79  ./mergesort -v
+   80  ./mergesort -V
+   81  ./mergesort -V
+   82  ls
+   83  vim input.txt
+   84  fg
+   85  fg
+   86  vim input.txt
+   87  clear
+   88  vim input.txt
+   89  ./mergesort -i input.txt -o -
+   90  ./mergesort -i input.txt -o output.txt
+   91  vim output.txt
+   92  clear
+   93  ./mergesort
+   94  clear
+   95  ./mergesort -i - -o -
+   96  ./mergesort -i - -o output_2.txt
+   97  vim output_2.txt 
+   98  vim input.txt
+   99  git add input.txt
+  100  git status
+  101  git commit -m "Subo input arreglado"
+  102  git push
+  103  git push
+  104  poweroff
+  105  cat /sys/kernel/debug/mips/unaligned_action
+  106  cat /sys/kernel/debug/mips/unaligned_instruction
+  107  cat /sys/kernel/debug/mips/unaligned_instructions
+  108  echo 1 > /sys/kernel/debug/mips/unaligned_action
+  109  cat /sys/kernel/debug/mips/unaligned_action
+  110  ls
+  111  cd tp1_compus/
+  112  cd organizacion-de-computadoras/
+  113  git reset --hard origin/master
+  114  git pull
+  115  cd
+  116  dhclient
+  117  cd tp1_compus/
+  118  cd organizacion-de-computadoras/
+  119  git reset --hard origin/master
+  120  git pull
+  121  ls
+  122  rm -r factorial/
+  123  rm -r trabajo-practico-1/
+  124  ls
+  125  git reset --hard origin/master
+  126  ls
+  127  git pull
+  128  cd trabajo-practico-1/
+  129  gcc -Wall -g -o tp vsorter.c mergesort.S
+  130  git pull
+  131  git pull
+  132  gcc -Wall -g -o tp vsorter.c mergesort.S
+  133  ./tp -i input.txt
+  134  ./tp -i input.txt -o -
+  135  ./tp -i input.txt
+  136  vim input.txt
+  137  clear
+  138  ./tp -i input.txt
+  139  ./tp -i input.txt -o -
+  140  cd
+  141  cat /sys/kernel/debug/mips/unaligned_action
+  142  cat /sys/kernel/debug/mips/unaligned_instructions 
+  143  cd tp1_compus/organizacion-de-computadoras/trabajo-practico-1/
+  144  vim vsorter.c 
+  145  clear
+  146  git pull
+  147  gcc -Wall -g -o tp vsorter.c mergesort.S
+  148  ./tp -i input.txt
+  149  git pull
+  150  gcc -Wall -g -o tp vsorter.c mergesort.S
+  151  ./tp -i input.txt
+  152  ./tp -o output.txt
+  153  fg
+  154  cat output.txt 
+  155  git pull
+  156  git pull
+  157  gcc -Wall -g -o tp vsorter.c mergesort.S
+  158  ./tp -i input.txt 
+  159  gcc -Wall -O0 -S vsorter.c mergesort.S
+  160  ls
+  161  gcc -h
+  162  gcc --h
+  163  cat vsorter.s
+  164  git add vsorter.s
+  165  git status
+  166  rm output.txt 
+  167  git commit -m "Archivo .s generado por MIPS en qemu"
+  168  git push
+  169  poweroff
+  170  cat /etc/os-release
+  171  cd tp1_compus/organizacion-de-computadoras/trabajo-practico-1/
+  172  ls
+  173  rm tp
+  174  git pull
+  175  dhclient
+  176  git pull
+  177  vim input.txt
+  178  gcc -Wall -g -o tp vsorter.c mergesort.S
+  179  ./tp -i input.txt -o -
+  180  vim input.txt
+  181  ./tp -i input.txt -o -
+  182  vim input.txt
+  183  ./tp -i input.txt -o -
+  184  ./tp -i input.txt
+  185  vim vsorter.c
+  186  gcc -Wall -g -o tp vsorter.c mergesort.S
+  187  ./tp -i input.txt -o -
+  188  vim vsorter.c
+  189  gcc -Wall -g -o tp vsorter.c mergesort.S
+  190  vim vsorter.c
+  191  gcc -Wall -g -o tp vsorter.c mergesort.S
+  192  vim vsorter.c
+  193  gcc -Wall -g -o tp vsorter.c mergesort.S
+  194  ./tp -i input.txt -o -
+  195  rm vsorter.c
+  196  git pull
+  197  gcc -Wall -g -o tp vsorter.c mergesort.S
+  198  vim input.txt
+  199  vim vsorter.c
+  200  rm vsorter.c
+  201  git pull
+  202  vim input.txt
+  203  gcc -Wall -g -o tp vsorter.c mergesort.S
+  204  ./tp -i input.txt -o -
+  205  ./tp -i input.txt -o output.txt
+  206  vim output.txt
+  207  vim vsorter.c
+  208  gcc -Wall -g -o tp vsorter.c mergesort.S
+  209  ./tp -i input.txt -o output.txt
+  210  vim output.txt
+  211  git status
+  212  git add vsorter.c
+  213  git rm input.txt
+  214  git rm output.txt 
+  215  rm output.txt 
+  216  rm tp
+  217  git status
+  218  git commit -m "Arreglado papu"
+  219  git push
+  220  rm input.txt
+  221  git reset --hard origin/master
+  222  git pull
+  223  vim input.txt 
+  224  poweroff
+  225  dhclient
+  226  cd tp1_compus/organizacion-de-computadoras/trabajo-practico-1/
+  227  ls
+  228  git pull
+  229  vim input.txt
+  230  gcc -Wall -g -o tp vsorter.c mergesort.S
+  231  rm tp
+  232  gcc -Wall -g -o mergesort vsorter.c mergesort.S
+  233  ./mergesort -i input.txt -o output.txt
+  234  vim output.txt
+  235  ./mergesort -i input.txt -o -
+  236  ls
+  237  rm output.txt 
+  238  rm vsorter.s
+  239  gcc -Wall -S vsorter.c mergesort.S
+  240  ls
+  241  git add vsorter.s
+  242  git status
+  243  rm mergesort
+  244  git status
+  245  git commit -m "Archivo assembly de vsorter actualizado"
+  246  git push
+  247  vim vsorter.s
+  248  poweroff
+  249  dhclient
+  250  cd tp1_compus/organizacion-de-computadoras/trabajo-practico-1/
+  251  git pull
+  252  gcc -Wall -g -o tp vsorter.c mergesort.S
+  253  ./tp -i input.txt -o -
+  254  ./tp -i - -o -
+  255  git pull
+  256  gcc -Wall -g -o tp vsorter.c mergesort.S
+  257  ./tp -i input.txt -o -
+  258  cd ..
+  259  cd
+  260  cat /sys/kernel/debug/mips/unaligned_action
+  261  echo 1 > /sys/kernel/debug/mips/unaligned_action
+  262  cat /sys/kernel/debug/mips/unaligned_action
+  263  cd tp1_compus/organizacion-de-computadoras/trabajo-practico-1/
+  264  gcc -Wall -g -o tp vsorter.c mergesort.S
+  265  ./tp -i input.txt -o -
+  266  poweroff
+  267  dhclient
+  268  ls
+  269  mv tp1_compus/ compus
+  270  ls
+  271  cd compus
+  272  ls
+  273  cd organizacion-de-computadoras/
+  274  git status
+  275  cd trabajo-practico-1/
+  276  rm tp
+  277  cd ..
+  278  ls
+  279  git pull
+  280  git pull
+  281  gzip --version
+  282  git pull
+  283  cd trabajo-practico-2/
+  284  git status
+  285  mv valgrind-mips32-debian-stretch.tar.gz ../../../
+  286  cd ../../../
+  287  ls
+  288  cd /opt/
+  289  cd ..
+  290  ls
+  291  poweroff
+  292  dhclient
+  293  ls
+  294  cd compus/
+  295  cd organizacion-de-computadoras/trabajo-practico-1/
+  296  ls
+  297  gcc -Wall -g -o vsorter.c mergesort.S
+  298  gcc -Wall -g -o tp vsorter.c mergesort.S
+  299  ls
+  300  rm vsorter.s 
+  301  git reset --hard origin/master
+  302  gcc -Wall -g -o tp vsorter.c mergesort.S
+  303  ./tp
+  304  ./tp -i - -o -
+  305  vim vsorter.c 
+  306  gcc -Wall -g -o tp vsorter.c mergesort.S
+  307  ./tp
+  308  echo 1 | ./tp
+  309  cd ..
+  310  git pull
+  311  cd ../..
+  312  gzip -dc valgrind-mips32-debian-stretch.tar.gz | (cd /opt/; tar -xvf -)
+  313  gcc -Wall -g -o /tmp/01-holamundo /opt/valgrind/share/fiuba/01-holamundo.S
+  314  /opt/valgrind/bin/valgrind --tool=cachegrind /tmp/01-holamundo
+  315  /opt/valgrind/bin/cg_annotate cachegrind.out.3470 /opt/valgrind/share/fiuba/01-holamundo.S
+  316  ls
+  317  clear
+  318  ls
+  319* 
+  320  ls
+  321  /opt/valgrind/bin/cg_annotate cachegrind.out.589 /opt/valgrind/share/fiuba/01-holamundo.S
+  322  lsls
+  323  ls
+  324  rm cachegrind.out.589 
+  325  cd compus/organizacion-de-computadoras/
+  326  git pull
+  327  dhclinet
+  328  dhclient
+  329  git pull
+  330  cd trabajo-practico-2
+  331  cd benchmarks-tp2
+  332  vim Makefile 
+  333  make
+  334  sudo apt install make
+  335  apt install make
+  336  ls
+  337  make
+  338  ls
+  339  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,1,16 --D1=64,1,16 --LL=64,1,16 benchmark-b0
+  340  pwd
+  341  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,1,16 --D1=64,1,16 --LL=64,1,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b0
+  342  ls
+  343  /opt/valgrind/bin/cg_annotate cachegrind.out.727 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b0.S >c1_b0.txt
+  344  cat c1_b0.txt 
+  345  clear
+  346  pwd
+  347  ls
+  348  rm cachegrind.out.727 
+  349  hystory >hist.txt
+  350  history >hist.txt
+  351  cat hist
+  352  cat hist.txt 
+  353  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,1,16 --D1=64,1,16 --LL=64,1,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b1
+  354  /opt/valgrind/bin/cg_annotate cachegrind.out.747 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b1.S >c1_b1.txt
+  355  ls
+  356  rm cachegrind.out.747 
+  357  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,1,16 --D1=64,1,16 --LL=64,1,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b2
+  358  /opt/valgrind/bin/cg_annotate cachegrind.out.755 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b2.S >c1_b2.txt
+  359  cat c1_b2.txt 
+  360  rm cachegrind.out.755 
+  361  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,1,16 --D1=64,1,16 --LL=64,1,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b2 >c1_b2_res.txt
+  362  ls
+  363  cat c1_b2_res.txt 
+  364  cat c1_b2_res.txt 
+  365  cat cachegrind.out.769 
+  366  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,1,16 --D1=64,1,16 --LL=64,1,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b2 &>c1_b2_res.txt
+  367  cat c1_b2_res.txt 
+  368  rm cachegrind.out.7
+  369  ls
+  370  rm cachegrind.out.769 
+  371  rm cachegrind.out.774 
+  372  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,1,16 --D1=64,1,16 --LL=64,1,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b1 &>c1_b1_res.txt
+  373  rm cachegrind.out.787 
+  374  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,1,16 --D1=64,1,16 --LL=64,1,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b0 &>c1_b0_res.txt
+  375  rm cachegrind.out.789 
+  376  ls
+  377  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,1,16 --D1=64,1,16 --LL=64,1,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b3 &>c1_b3_res.txt
+  378  /opt/valgrind/bin/cg_annotate cachegrind.out.792 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b3.S >c1_b3.txt
+  379  rm cachegrind.out.792 
+  380  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,2,16 --D1=64,2,16 --LL=64,2,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b0 &>c2_b0_res.txt
+  381  /opt/valgrind/bin/cg_annotate cachegrind.out.796 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b0.S >c2_b0.txt
+  382  rm cachegrind.out.796 
+  383  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,2,16 --D1=64,2,16 --LL=64,2,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b1 &>c2_b1_res.txt
+  384  /opt/valgrind/bin/cg_annotate cachegrind.out.802 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b1.S >c2_b1.txt
+  385  rm cachegrind.out.802 
+  386  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,2,16 --D1=64,2,16 --LL=64,2,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b2 &>c2_b2_res.txt
+  387  /opt/valgrind/bin/cg_annotate cachegrind.out.808 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b2.S >c2_b2.txt
+  388  rm cachegrind.out.808 
+  389  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,2,16 --D1=64,2,16 --LL=64,2,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b3 &>c2_b3_res.txt
+  390  /opt/valgrind/bin/cg_annotate cachegrind.out.812 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b3.S >c2_b3.txt
+  391  ls
+  392  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,4,16 --D1=64,4,16 --LL=64,4,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b0 &>c3_b0_res.txt
+  393  ls
+  394  /opt/valgrind/bin/cg_annotate cachegrind.out.818 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b0.S >c3_b0.txt
+  395  rm cachegrind.out.812
+  396  rm cachegrind.out.818
+  397  ls
+  398  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,4,16 --D1=64,4,16 --LL=64,4,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b1 &>c3_b1_res.txt
+  399  /opt/valgrind/bin/cg_annotate cachegrind.out.827 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b1.S >c3_b1.txt
+  400  rm cachegrind.out.827 
+  401  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,4,16 --D1=64,4,16 --LL=64,4,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b2 &>c3_b2_res.txt
+  402  /opt/valgrind/bin/cg_annotate cachegrind.out.831 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b2.S >c3_b2.txt
+  403  rm cachegrind.out.831 
+  404  /opt/valgrind/bin/valgrind --tool=cachegrind --I1=64,4,16 --D1=64,4,16 --LL=64,4,16 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b3 &>c3_b3_res.txt
+  405  /opt/valgrind/bin/cg_annotate cachegrind.out.837 /root/compus/organizacion-de-computadoras/trabajo-practico-2/benchmarks-tp2/benchmark-b3.S >c3_b3.txt
+  406  rm cachegrind.out.837 
+  407  ls
+  408  git add c1_*
+  409  git add c2_*
+  410  git add c3_*
+  411  rm hist.txt 
+  412  history >hist.txt
