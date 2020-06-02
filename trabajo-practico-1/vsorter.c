@@ -220,13 +220,19 @@ int main(int argc, char* const argv[]) {
 
     int mode = get_exec_mode(argc, argv);
 
+
     switch (mode) {
         case V_MODE:
             return version();
         case H_MODE:
             return help();
+<<<<<<< HEAD
         case STD_MODE:
             break;
+=======
+	case STD_MODE:
+	    break;
+>>>>>>> a788b753a31c2bb08ad0e80115423706c477ef97
         case I_MODE: {
             i_filename = argv[2];
             break;
