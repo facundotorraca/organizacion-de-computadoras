@@ -28,7 +28,7 @@ bool vector_empty(vector_t* self) {
 }
 
 void vector_push(vector_t* self, int n) {
-    if (self->size == this->max_size - 1)
+    if (self->size == self->max_size - 1)
         realloc(self->array, self->max_size * 2);
 
     self->array[self->size] = n;
