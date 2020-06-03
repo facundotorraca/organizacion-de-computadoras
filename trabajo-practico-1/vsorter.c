@@ -153,8 +153,6 @@ int read_vector(FILE* i_file, vector_t* vector) {
 
     ssize_t bytes_read = getline(&buffer, &size_buff, i_file);
 
-    printf("Size: %lu\n", sizeof(ssize_t));
-
     if (bytes_read == ERROR || bytes_read == 0) {
         if (bytes_read == ERROR) perror(NULL);
         free(buffer);
