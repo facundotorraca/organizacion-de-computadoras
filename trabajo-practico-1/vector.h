@@ -8,7 +8,7 @@
 
 #define ERROR -1
 #define SUCCESS 0
-#define INIT_SIZE 256
+#define INIT_SIZE 4096
 
 typedef struct vector {
     int* array;
@@ -28,6 +28,9 @@ bool vector_empty(vector_t* self) {
 }
 
 void vector_push(vector_t* self, int n) {
+    if (self->size == this->max_size - 1)
+        realloc(self->array, self->max_size * 2);
+
     self->array[self->size] = n;
     self->size++;
 }
