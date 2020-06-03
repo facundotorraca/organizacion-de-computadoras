@@ -5,7 +5,7 @@ int main(void) {
     int n;
 
     for (size_t i = 0; i < 20000; i++) {
-	n = rand() % 100;
+        n = rand() % 100;
         printf("%i ", n);
     }
 

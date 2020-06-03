@@ -167,8 +167,12 @@ int read_vector(FILE* i_file, vector_t* vector) {
 
 void print_sorted_vec(FILE* o_file, vector_t* vector) {
     if (vector) {
-        for (size_t i = 0; i < vector->size; i++)
-            fprintf(o_file, "%i ", vector->array[i]);
+        for (size_t i = 0; i < vector->size; i++) {
+            if (i < vector->size - 1)
+                fprintf(o_file, "%i ", vector->array[i]);
+            else // Last element avoid space
+                fprintf(o_file, "%i", vector->array[i]);
+        }
     }
 
     fprintf(o_file,"\n");
