@@ -64,23 +64,41 @@ Ir  I1mr ILmr Dr  D1mr DLmr Dw D1mw DLmw
   .    .    .   .    .    .  .    .    .  	.ent	main
   .    .    .   .    .    .  .    .    .  main:
   .    .    .   .    .    .  .    .    .  	.set	noreorder
+###################################################################################
   3    1    1   0    0    0  0    0    0  	.cpload	t9
   .    .    .   .    .    .  .    .    .  	.set	nomacro
   1    0    0   0    0    0  0    0    0  	addiu	sp, sp, -24
+###################################################################################
+
+###################################################################################
   1    1    1   0    0    0  1    1    1  	sw	fp, 20(sp)
   1    0    0   0    0    0  0    0    0  	move	fp, sp
   1    0    0   0    0    0  1    1    1  	.cprestore	0
+###################################################################################
+
+###################################################################################
   .    .    .   .    .    .  .    .    .  
   2    1    1   1    1    1  0    0    0  	la	t0, aligned
   1    0    0   0    0    0  0    0    0  	li	t1, 100
+###################################################################################
+
+
+###################################################################################
   .    .    .   .    .    .  .    .    .  	.align	20
 100    1    1 100  100  100  0    0    0  loop:	lw	t2, 0(t0)
 100    0    0   0    0    0  0    0    0  	addu	t0, t0, 16 
 100    0    0   0    0    0  0    0    0  	subu	t1, t1, 1
 100    0    0   0    0    0  0    0    0  	bnez	t1, loop
+
+
+Respecto a la cache de instrucciones, apenas vamos a tener 1 miss compulsivo en la primera iteracion en la instruccion lw, lo que va a traer el bloque completo de 16 bytes que incluye completamente el loop. Sobre los misses de memoria (lectura) se traen a la cache de a 4 bloques (orden: idx = 0 via 1, idx = 1 via 1, idx = 0 via = 2, idx = 1 via 2 y seguiria en ese orden si el remplazo es LRU). Como la siguiente posicion leeida es 16 bytes mas adelantes, entonces nunca cae dentro del bloque traido a cache por lo que en cada iteracion hay un miss).
+
+###################################################################################
   .    .    .   .    .    .  .    .    .  
   .    .    .   .    .    .  .    .    .  	# Destruimos el stack frame antes de retornar de main().
   .    .    .   .    .    .  .    .    .  	#
+
+###################################################################################
 100    1    1   0    0    0  0    0    0  	move	sp, fp
   1    0    0   1    1    1  0    0    0  	lw	fp, 20(sp)
   1    0    0   0    0    0  0    0    0  	addiu	sp, sp, 24
@@ -88,6 +106,9 @@ Ir  I1mr ILmr Dr  D1mr DLmr Dw D1mw DLmw
   .    .    .   .    .    .  .    .    .  	# Para volver al sistema operativo cargamos un código de retorno nulo.
   .    .    .   .    .    .  .    .    .  	#
   1    0    0   0    0    0  0    0    0  	move	v0, zero
+###################################################################################
+
+###################################################################################
   1    1    1   0    0    0  0    0    0  	jr	ra
   .    .    .   .    .    .  .    .    .  	.end	main
   .    .    .   .    .    .  .    .    .  
