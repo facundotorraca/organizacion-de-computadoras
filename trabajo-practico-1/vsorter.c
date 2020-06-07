@@ -268,7 +268,7 @@ int main(int argc, char* const argv[]) {
     if (!output_is_std) {
         o_file = fopen(o_filename, "w+");
         if (!o_file) {
-            fprintf(stderr, "could not open output file\n");
+            perror("could not open output file\n");
             if (!input_is_std) fclose(i_file);
             return ERROR;
         }
