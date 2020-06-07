@@ -6,7 +6,7 @@
 int main(void) {
     int32_t n;
 
-    for (size_t i = 0; i < MB40*2; i++) {
+    for (size_t i = 0; i < MB40/4; i++) {
         n = rand() % 100;
         printf("%i ", n);
     }
