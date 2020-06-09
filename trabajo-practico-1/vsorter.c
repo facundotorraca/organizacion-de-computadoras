@@ -250,7 +250,7 @@ int main(int argc, char* const argv[]) {
             break;
         }
         default: {
-            fprintf(stderr,"unrecognized command line option");
+            fprintf(stderr,"unrecognized command line option\n");
             return ERROR;
         }
     }
