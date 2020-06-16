@@ -4,11 +4,13 @@
 
 #define MS_A1_OFF 44
 #define MS_A0_OFF 40
-#define MS_STACK_SZ 40
+
 #define MS_RA_OFF 32
 #define MS_FP_OFF 28
 #define MS_GP_OFF 24
+
 #define MS_LTA_OFF 16
+#define MS_STACK_SZ 40
 
 .data
 err_msg: .asciiz "Mymalloc error\n"

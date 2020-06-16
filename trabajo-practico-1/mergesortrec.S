@@ -5,11 +5,13 @@
 #define MSR_A2_OFF 48
 #define MSR_A1_OFF 44
 #define MSR_A0_OFF 40
-#define MSR_STACK_SZ 40
+
 #define MSR_RA_OFF 32
 #define MSR_FP_OFF 28
 #define MSR_GP_OFF 24
+
 #define MSR_LTA_OFF 16
+#define MSR_STACK_SZ 40
 
 .text
 .align 2

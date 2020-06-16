@@ -4,10 +4,12 @@
 #define MER_A2_OFF 40
 #define MER_A1_OFF 36
 #define MER_A0_OFF 32
-#define MER_STACK_SZ 32
+
 #define MER_RA_OFF 24
 #define MER_FP_OFF 20
 #define MER_GP_OFF 16
+
+#define MER_STACK_SZ 32
 
 .text
 .align 2
