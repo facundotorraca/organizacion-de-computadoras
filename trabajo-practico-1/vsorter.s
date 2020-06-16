@@ -26,7 +26,7 @@ vector_init:
 	.cprestore	16
 	sw	$4,32($fp)
 	li	$5,4			# 0x4
-	li	$4,256			# 0x100
+	li	$4,4096			# 0x1000
 	lw	$2,%call16(calloc)($28)
 	move	$25,$2
 	.reloc	1f,R_MIPS_JALR,calloc
@@ -38,7 +38,7 @@ vector_init:
 	lw	$2,32($fp)
 	sw	$3,0($2)
 	lw	$2,32($fp)
-	li	$3,256			# 0x100
+	li	$3,4096			# 0x1000
 	sw	$3,8($2)
 	lw	$2,32($fp)
 	sw	$0,4($2)
@@ -91,33 +91,68 @@ vector_empty:
 	.ent	vector_push
 	.type	vector_push, @function
 vector_push:
-	.frame	$fp,8,$31		# vars= 0, regs= 1/0, args= 0, gp= 0
-	.mask	0x40000000,-4
+	.frame	$fp,32,$31		# vars= 0, regs= 2/0, args= 16, gp= 8
+	.mask	0xc0000000,-4
 	.fmask	0x00000000,0
 	.set	noreorder
+	.cpload	$25
 	.set	nomacro
-	addiu	$sp,$sp,-8
-	sw	$fp,4($sp)
+	addiu	$sp,$sp,-32
+	sw	$31,28($sp)
+	sw	$fp,24($sp)
 	move	$fp,$sp
-	sw	$4,8($fp)
-	sw	$5,12($fp)
-	lw	$2,8($fp)
+	.cprestore	16
+	sw	$4,32($fp)
+	sw	$5,36($fp)
+	lw	$2,32($fp)
+	lw	$3,4($2)
+	lw	$2,32($fp)
+	lw	$2,8($2)
+	addiu	$2,$2,-1
+	bne	$3,$2,$L6
+	nop
+
+	lw	$2,32($fp)
+	lw	$2,8($2)
+	sll	$3,$2,1
+	lw	$2,32($fp)
+	sw	$3,8($2)
+	lw	$2,32($fp)
 	lw	$3,0($2)
-	lw	$2,8($fp)
+	lw	$2,32($fp)
+	lw	$2,8($2)
+	sll	$2,$2,2
+	move	$5,$2
+	move	$4,$3
+	lw	$2,%call16(realloc)($28)
+	move	$25,$2
+	.reloc	1f,R_MIPS_JALR,realloc
+1:	jalr	$25
+	nop
+
+	lw	$28,16($fp)
+	move	$3,$2
+	lw	$2,32($fp)
+	sw	$3,0($2)
+$L6:
+	lw	$2,32($fp)
+	lw	$3,0($2)
+	lw	$2,32($fp)
 	lw	$2,4($2)
 	sll	$2,$2,2
 	addu	$2,$3,$2
-	lw	$3,12($fp)
+	lw	$3,36($fp)
 	sw	$3,0($2)
-	lw	$2,8($fp)
+	lw	$2,32($fp)
 	lw	$2,4($2)
 	addiu	$3,$2,1
-	lw	$2,8($fp)
+	lw	$2,32($fp)
 	sw	$3,4($2)
 	nop
 	move	$sp,$fp
-	lw	$fp,4($sp)
-	addiu	$sp,$sp,8
+	lw	$31,28($sp)
+	lw	$fp,24($sp)
+	addiu	$sp,$sp,32
 	jr	$31
 	nop
 
@@ -202,7 +237,7 @@ vector_destroy:
 
 	lw	$28,16($fp)
 	lw	$2,32($fp)
-	li	$3,256			# 0x100
+	li	$3,4096			# 0x1000
 	sw	$3,8($2)
 	lw	$2,32($fp)
 	sw	$0,0($2)
@@ -257,7 +292,7 @@ is_help_flag:
 	nop
 
 	lw	$28,16($fp)
-	beq	$2,$0,$L9
+	beq	$2,$0,$L10
 	nop
 
 	lw	$2,%got($LC1)($28)
@@ -270,17 +305,17 @@ is_help_flag:
 	nop
 
 	lw	$28,16($fp)
-	bne	$2,$0,$L10
-	nop
-
-$L9:
-	li	$2,1			# 0x1
-	b	$L11
+	bne	$2,$0,$L11
 	nop
 
 $L10:
-	move	$2,$0
+	li	$2,1			# 0x1
+	b	$L12
+	nop
+
 $L11:
+	move	$2,$0
+$L12:
 	andi	$2,$2,0x1
 	andi	$2,$2,0x00ff
 	move	$sp,$fp
@@ -331,7 +366,7 @@ is_version_flag:
 	nop
 
 	lw	$28,16($fp)
-	beq	$2,$0,$L14
+	beq	$2,$0,$L15
 	nop
 
 	lw	$2,%got($LC3)($28)
@@ -344,17 +379,17 @@ is_version_flag:
 	nop
 
 	lw	$28,16($fp)
-	bne	$2,$0,$L15
-	nop
-
-$L14:
-	li	$2,1			# 0x1
-	b	$L16
+	bne	$2,$0,$L16
 	nop
 
 $L15:
-	move	$2,$0
+	li	$2,1			# 0x1
+	b	$L17
+	nop
+
 $L16:
+	move	$2,$0
+$L17:
 	andi	$2,$2,0x1
 	andi	$2,$2,0x00ff
 	move	$sp,$fp
@@ -405,7 +440,7 @@ is_input_flag:
 	nop
 
 	lw	$28,16($fp)
-	beq	$2,$0,$L19
+	beq	$2,$0,$L20
 	nop
 
 	lw	$2,%got($LC5)($28)
@@ -418,17 +453,17 @@ is_input_flag:
 	nop
 
 	lw	$28,16($fp)
-	bne	$2,$0,$L20
-	nop
-
-$L19:
-	li	$2,1			# 0x1
-	b	$L21
+	bne	$2,$0,$L21
 	nop
 
 $L20:
-	move	$2,$0
+	li	$2,1			# 0x1
+	b	$L22
+	nop
+
 $L21:
+	move	$2,$0
+$L22:
 	andi	$2,$2,0x1
 	andi	$2,$2,0x00ff
 	move	$sp,$fp
@@ -479,7 +514,7 @@ is_output_flag:
 	nop
 
 	lw	$28,16($fp)
-	beq	$2,$0,$L24
+	beq	$2,$0,$L25
 	nop
 
 	lw	$2,%got($LC7)($28)
@@ -492,17 +527,17 @@ is_output_flag:
 	nop
 
 	lw	$28,16($fp)
-	bne	$2,$0,$L25
-	nop
-
-$L24:
-	li	$2,1			# 0x1
-	b	$L26
+	bne	$2,$0,$L26
 	nop
 
 $L25:
-	move	$2,$0
+	li	$2,1			# 0x1
+	b	$L27
+	nop
+
 $L26:
+	move	$2,$0
+$L27:
 	andi	$2,$2,0x1
 	andi	$2,$2,0x00ff
 	move	$sp,$fp
@@ -546,14 +581,14 @@ get_2args_mode:
 	nop
 
 	lw	$28,16($fp)
-	beq	$2,$0,$L29
+	beq	$2,$0,$L30
 	nop
 
 	li	$2,1			# 0x1
-	b	$L30
+	b	$L31
 	nop
 
-$L29:
+$L30:
 	lw	$4,24($fp)
 	lw	$2,%got(is_version_flag)($28)
 	move	$25,$2
@@ -562,16 +597,16 @@ $L29:
 	nop
 
 	lw	$28,16($fp)
-	beq	$2,$0,$L31
+	beq	$2,$0,$L32
 	nop
 
 	li	$2,2			# 0x2
-	b	$L30
+	b	$L31
 	nop
 
-$L31:
+$L32:
 	li	$2,-1			# 0xffffffffffffffff
-$L30:
+$L31:
 	move	$sp,$fp
 	lw	$31,36($sp)
 	lw	$fp,32($sp)
@@ -613,14 +648,14 @@ get_3args_mode:
 	nop
 
 	lw	$28,16($fp)
-	beq	$2,$0,$L33
+	beq	$2,$0,$L34
 	nop
 
 	li	$2,3			# 0x3
-	b	$L34
+	b	$L35
 	nop
 
-$L33:
+$L34:
 	lw	$4,24($fp)
 	lw	$2,%got(is_output_flag)($28)
 	move	$25,$2
@@ -629,16 +664,16 @@ $L33:
 	nop
 
 	lw	$28,16($fp)
-	beq	$2,$0,$L35
+	beq	$2,$0,$L36
 	nop
 
 	li	$2,4			# 0x4
-	b	$L34
+	b	$L35
 	nop
 
-$L35:
+$L36:
 	li	$2,-1			# 0xffffffffffffffff
-$L34:
+$L35:
 	move	$sp,$fp
 	lw	$31,36($sp)
 	lw	$fp,32($sp)
@@ -712,33 +747,33 @@ get_5args_mode:
 	lw	$28,16($fp)
 	sb	$2,35($fp)
 	lbu	$2,32($fp)
-	beq	$2,$0,$L37
+	beq	$2,$0,$L38
 	nop
 
 	lbu	$2,35($fp)
-	beq	$2,$0,$L37
+	beq	$2,$0,$L38
 	nop
 
 	li	$2,5			# 0x5
-	b	$L38
+	b	$L39
 	nop
 
-$L37:
+$L38:
 	lbu	$2,34($fp)
-	beq	$2,$0,$L39
+	beq	$2,$0,$L40
 	nop
 
 	lbu	$2,33($fp)
-	beq	$2,$0,$L39
+	beq	$2,$0,$L40
 	nop
 
 	li	$2,6			# 0x6
-	b	$L38
+	b	$L39
 	nop
 
-$L39:
+$L40:
 	li	$2,-1			# 0xffffffffffffffff
-$L38:
+$L39:
 	move	$sp,$fp
 	lw	$31,44($sp)
 	lw	$fp,40($sp)
@@ -772,38 +807,38 @@ get_exec_mode:
 	sw	$5,36($fp)
 	lw	$2,32($fp)
 	li	$3,2			# 0x2
-	beq	$2,$3,$L42
+	beq	$2,$3,$L43
 	nop
 
 	slt	$3,$2,3
-	beq	$3,$0,$L43
+	beq	$3,$0,$L44
 	nop
 
 	li	$3,1			# 0x1
-	beq	$2,$3,$L44
-	nop
-
-	b	$L41
-	nop
-
-$L43:
-	li	$3,3			# 0x3
 	beq	$2,$3,$L45
 	nop
 
-	li	$3,5			# 0x5
-	beq	$2,$3,$L46
-	nop
-
-	b	$L41
+	b	$L42
 	nop
 
 $L44:
-	li	$2,7			# 0x7
-	b	$L47
+	li	$3,3			# 0x3
+	beq	$2,$3,$L46
 	nop
 
-$L42:
+	li	$3,5			# 0x5
+	beq	$2,$3,$L47
+	nop
+
+	b	$L42
+	nop
+
+$L45:
+	li	$2,7			# 0x7
+	b	$L48
+	nop
+
+$L43:
 	lw	$4,36($fp)
 	lw	$2,%got(get_2args_mode)($28)
 	move	$25,$2
@@ -812,10 +847,10 @@ $L42:
 	nop
 
 	lw	$28,16($fp)
-	b	$L47
+	b	$L48
 	nop
 
-$L45:
+$L46:
 	lw	$4,36($fp)
 	lw	$2,%got(get_3args_mode)($28)
 	move	$25,$2
@@ -824,10 +859,10 @@ $L45:
 	nop
 
 	lw	$28,16($fp)
-	b	$L47
+	b	$L48
 	nop
 
-$L46:
+$L47:
 	lw	$4,36($fp)
 	lw	$2,%got(get_5args_mode)($28)
 	move	$25,$2
@@ -836,12 +871,12 @@ $L46:
 	nop
 
 	lw	$28,16($fp)
-	b	$L47
+	b	$L48
 	nop
 
-$L41:
+$L42:
 	li	$2,-1			# 0xffffffffffffffff
-$L47:
+$L48:
 	move	$sp,$fp
 	lw	$31,28($sp)
 	lw	$fp,24($sp)
@@ -887,7 +922,7 @@ remove_endline:
 	addu	$2,$3,$2
 	lb	$3,0($2)
 	li	$2,10			# 0xa
-	bne	$3,$2,$L50
+	bne	$3,$2,$L51
 	nop
 
 	lw	$2,24($fp)
@@ -895,7 +930,7 @@ remove_endline:
 	lw	$3,40($fp)
 	addu	$2,$3,$2
 	sb	$0,0($2)
-$L50:
+$L51:
 	nop
 	move	$sp,$fp
 	lw	$31,36($sp)
@@ -960,10 +995,10 @@ parse_vec_buffer:
 
 	lw	$28,16($fp)
 	sw	$2,24($fp)
-	b	$L52
+	b	$L53
 	nop
 
-$L53:
+$L54:
 	li	$6,10			# 0xa
 	move	$5,$0
 	lw	$4,24($fp)
@@ -995,9 +1030,9 @@ $L53:
 
 	lw	$28,16($fp)
 	sw	$2,24($fp)
-$L52:
+$L53:
 	lw	$2,24($fp)
-	bne	$2,$0,$L53
+	bne	$2,$0,$L54
 	nop
 
 	move	$2,$0
@@ -1049,17 +1084,17 @@ read_vector:
 	sw	$2,24($fp)
 	lw	$3,24($fp)
 	li	$2,-1			# 0xffffffffffffffff
-	beq	$3,$2,$L56
+	beq	$3,$2,$L57
 	nop
 
 	lw	$2,24($fp)
-	bne	$2,$0,$L57
+	bne	$2,$0,$L58
 	nop
 
-$L56:
+$L57:
 	lw	$3,24($fp)
 	li	$2,-1			# 0xffffffffffffffff
-	bne	$3,$2,$L58
+	bne	$3,$2,$L59
 	nop
 
 	move	$4,$0
@@ -1070,7 +1105,7 @@ $L56:
 	nop
 
 	lw	$28,16($fp)
-$L58:
+$L59:
 	lw	$2,28($fp)
 	move	$4,$2
 	lw	$2,%call16(free)($28)
@@ -1081,10 +1116,10 @@ $L58:
 
 	lw	$28,16($fp)
 	li	$2,-1			# 0xffffffffffffffff
-	b	$L60
+	b	$L61
 	nop
 
-$L57:
+$L58:
 	lw	$2,28($fp)
 	lw	$5,52($fp)
 	move	$4,$2
@@ -1105,7 +1140,7 @@ $L57:
 
 	lw	$28,16($fp)
 	move	$2,$0
-$L60:
+$L61:
 	move	$sp,$fp
 	lw	$31,44($sp)
 	lw	$fp,40($sp)
@@ -1121,6 +1156,9 @@ $L60:
 	.align	2
 $LC9:
 	.ascii	"%i \000"
+	.align	2
+$LC10:
+	.ascii	"%i\000"
 	.text
 	.align	2
 	.globl	print_sorted_vec
@@ -1143,14 +1181,22 @@ print_sorted_vec:
 	sw	$4,40($fp)
 	sw	$5,44($fp)
 	lw	$2,44($fp)
-	beq	$2,$0,$L62
+	beq	$2,$0,$L63
 	nop
 
 	sw	$0,24($fp)
-	b	$L63
+	b	$L64
 	nop
 
-$L64:
+$L67:
+	lw	$2,44($fp)
+	lw	$2,4($2)
+	addiu	$3,$2,-1
+	lw	$2,24($fp)
+	sltu	$2,$2,$3
+	beq	$2,$0,$L65
+	nop
+
 	lw	$2,44($fp)
 	lw	$3,0($2)
 	lw	$2,24($fp)
@@ -1168,18 +1214,40 @@ $L64:
 	nop
 
 	lw	$28,16($fp)
+	b	$L66
+	nop
+
+$L65:
+	lw	$2,44($fp)
+	lw	$3,0($2)
+	lw	$2,24($fp)
+	sll	$2,$2,2
+	addu	$2,$3,$2
+	lw	$2,0($2)
+	move	$6,$2
+	lw	$2,%got($LC10)($28)
+	addiu	$5,$2,%lo($LC10)
+	lw	$4,40($fp)
+	lw	$2,%call16(fprintf)($28)
+	move	$25,$2
+	.reloc	1f,R_MIPS_JALR,fprintf
+1:	jalr	$25
+	nop
+
+	lw	$28,16($fp)
+$L66:
 	lw	$2,24($fp)
 	addiu	$2,$2,1
 	sw	$2,24($fp)
-$L63:
+$L64:
 	lw	$2,44($fp)
 	lw	$3,4($2)
 	lw	$2,24($fp)
 	sltu	$2,$2,$3
-	bne	$2,$0,$L64
+	bne	$2,$0,$L67
 	nop
 
-$L62:
+$L63:
 	lw	$5,40($fp)
 	li	$4,10			# 0xa
 	lw	$2,%call16(fputc)($28)
@@ -1203,42 +1271,42 @@ $L62:
 	.size	print_sorted_vec, .-print_sorted_vec
 	.rdata
 	.align	2
-$LC10:
+$LC11:
 	.ascii	"Usage:\000"
 	.align	2
-$LC11:
+$LC12:
 	.ascii	"\011tp1 -h\000"
 	.align	2
-$LC12:
+$LC13:
 	.ascii	"\011tp1 -V\000"
 	.align	2
-$LC13:
+$LC14:
 	.ascii	"\011tp1 -i in_file -o out_file\000"
 	.align	2
-$LC14:
+$LC15:
 	.ascii	"Options:\000"
 	.align	2
-$LC15:
+$LC16:
 	.ascii	"\011-V, --version Print version and quit.\000"
 	.align	2
-$LC16:
+$LC17:
 	.ascii	"\011-h, --help Print this information and quit.\000"
 	.align	2
-$LC17:
+$LC18:
 	.ascii	"\011-i, --input Specify input stream/file, '-' for stdin"
 	.ascii	"\000"
 	.align	2
-$LC18:
+$LC19:
 	.ascii	"\011-o, --output Specify output stream/file, '-' for std"
 	.ascii	"out.\000"
 	.align	2
-$LC19:
+$LC20:
 	.ascii	"Examples:\000"
 	.align	2
-$LC20:
+$LC21:
 	.ascii	"\011tp1 < in.txt > out.txt\000"
 	.align	2
-$LC21:
+$LC22:
 	.ascii	"\011cat in.txt | tp1 -i - > out.txt\000"
 	.text
 	.align	2
@@ -1259,15 +1327,6 @@ help:
 	sw	$fp,24($sp)
 	move	$fp,$sp
 	.cprestore	16
-	lw	$2,%got($LC10)($28)
-	addiu	$4,$2,%lo($LC10)
-	lw	$2,%call16(puts)($28)
-	move	$25,$2
-	.reloc	1f,R_MIPS_JALR,puts
-1:	jalr	$25
-	nop
-
-	lw	$28,16($fp)
 	lw	$2,%got($LC11)($28)
 	addiu	$4,$2,%lo($LC11)
 	lw	$2,%call16(puts)($28)
@@ -1367,6 +1426,15 @@ help:
 	nop
 
 	lw	$28,16($fp)
+	lw	$2,%got($LC22)($28)
+	addiu	$4,$2,%lo($LC22)
+	lw	$2,%call16(puts)($28)
+	move	$25,$2
+	.reloc	1f,R_MIPS_JALR,puts
+1:	jalr	$25
+	nop
+
+	lw	$28,16($fp)
 	move	$2,$0
 	move	$sp,$fp
 	lw	$31,28($sp)
@@ -1381,7 +1449,7 @@ help:
 	.size	help, .-help
 	.rdata
 	.align	2
-$LC22:
+$LC23:
 	.ascii	"vsorter version: 1.0.0\000"
 	.text
 	.align	2
@@ -1402,8 +1470,8 @@ version:
 	sw	$fp,24($sp)
 	move	$fp,$sp
 	.cprestore	16
-	lw	$2,%got($LC22)($28)
-	addiu	$4,$2,%lo($LC22)
+	lw	$2,%got($LC23)($28)
+	addiu	$4,$2,%lo($LC23)
 	lw	$2,%call16(puts)($28)
 	move	$25,$2
 	.reloc	1f,R_MIPS_JALR,puts
@@ -1452,10 +1520,10 @@ sort:
 	nop
 
 	lw	$28,16($fp)
-	b	$L70
+	b	$L73
 	nop
 
-$L72:
+$L75:
 	addiu	$2,$fp,24
 	move	$4,$2
 	lw	$2,%got(vector_empty)($28)
@@ -1467,7 +1535,7 @@ $L72:
 	lw	$28,16($fp)
 	xori	$2,$2,0x1
 	andi	$2,$2,0x00ff
-	beq	$2,$0,$L71
+	beq	$2,$0,$L74
 	nop
 
 	lw	$2,24($fp)
@@ -1491,10 +1559,10 @@ $L72:
 	nop
 
 	lw	$28,16($fp)
-	b	$L70
+	b	$L73
 	nop
 
-$L71:
+$L74:
 	move	$5,$0
 	lw	$4,52($fp)
 	lw	$2,%got(print_sorted_vec)($28)
@@ -1504,7 +1572,7 @@ $L71:
 	nop
 
 	lw	$28,16($fp)
-$L70:
+$L73:
 	addiu	$2,$fp,24
 	move	$5,$2
 	lw	$4,48($fp)
@@ -1515,7 +1583,7 @@ $L70:
 	nop
 
 	lw	$28,16($fp)
-	beq	$2,$0,$L72
+	beq	$2,$0,$L75
 	nop
 
 	addiu	$2,$fp,24
@@ -1541,22 +1609,22 @@ $L70:
 	.size	sort, .-sort
 	.rdata
 	.align	2
-$LC23:
+$LC24:
 	.ascii	"-\000"
 	.align	2
-$LC24:
-	.ascii	"unrecognized command line option\000"
-	.align	2
 $LC25:
-	.ascii	"r+\000"
+	.ascii	"unrecognized command line option\012\000"
 	.align	2
 $LC26:
-	.ascii	"could not open input file\012\000"
+	.ascii	"r+\000"
 	.align	2
 $LC27:
-	.ascii	"w+\000"
+	.ascii	"could not open input file\012\000"
 	.align	2
 $LC28:
+	.ascii	"w+\000"
+	.align	2
+$LC29:
 	.ascii	"could not open output file\012\000"
 	.text
 	.align	2
@@ -1579,14 +1647,14 @@ main:
 	.cprestore	16
 	sw	$4,56($fp)
 	sw	$5,60($fp)
-	lw	$2,%got($LC23)($28)
-	addiu	$2,$2,%lo($LC23)
+	lw	$2,%got($LC24)($28)
+	addiu	$2,$2,%lo($LC24)
 	sw	$2,24($fp)
 	lw	$2,%got(stdin)($28)
 	lw	$2,0($2)
 	sw	$2,28($fp)
-	lw	$2,%got($LC23)($28)
-	addiu	$2,$2,%lo($LC23)
+	lw	$2,%got($LC24)($28)
+	addiu	$2,$2,%lo($LC24)
 	sw	$2,32($fp)
 	lw	$2,%got(stdout)($28)
 	lw	$2,0($2)
@@ -1602,14 +1670,14 @@ main:
 	lw	$28,16($fp)
 	sw	$2,40($fp)
 	lw	$2,40($fp)
-	sltu	$2,$2,7
-	beq	$2,$0,$L74
+	sltu	$2,$2,8
+	beq	$2,$0,$L77
 	nop
 
 	lw	$2,40($fp)
 	sll	$3,$2,2
-	lw	$2,%got($L76)($28)
-	addiu	$2,$2,%lo($L76)
+	lw	$2,%got($L79)($28)
+	addiu	$2,$2,%lo($L79)
 	addu	$2,$3,$2
 	lw	$2,0($2)
 	addu	$2,$2,$28
@@ -1619,16 +1687,17 @@ main:
 	.rdata
 	.align	2
 	.align	2
-$L76:
-	.gpword	$L74
-	.gpword	$L75
+$L79:
 	.gpword	$L77
 	.gpword	$L78
-	.gpword	$L79
 	.gpword	$L80
 	.gpword	$L81
+	.gpword	$L82
+	.gpword	$L83
+	.gpword	$L84
+	.gpword	$L93
 	.text
-$L77:
+$L80:
 	lw	$2,%got(version)($28)
 	move	$25,$2
 	.reloc	1f,R_MIPS_JALR,version
@@ -1636,10 +1705,10 @@ $L77:
 	nop
 
 	lw	$28,16($fp)
-	b	$L82
+	b	$L86
 	nop
 
-$L75:
+$L78:
 	lw	$2,%got(help)($28)
 	move	$25,$2
 	.reloc	1f,R_MIPS_JALR,help
@@ -1647,51 +1716,51 @@ $L75:
 	nop
 
 	lw	$28,16($fp)
-	b	$L82
-	nop
-
-$L78:
-	lw	$2,60($fp)
-	lw	$2,8($2)
-	sw	$2,24($fp)
-	b	$L83
-	nop
-
-$L79:
-	lw	$2,60($fp)
-	lw	$2,8($2)
-	sw	$2,32($fp)
-	b	$L83
-	nop
-
-$L80:
-	lw	$2,60($fp)
-	lw	$2,8($2)
-	sw	$2,24($fp)
-	lw	$2,60($fp)
-	lw	$2,16($2)
-	sw	$2,32($fp)
-	b	$L83
+	b	$L86
 	nop
 
 $L81:
 	lw	$2,60($fp)
+	lw	$2,8($2)
+	sw	$2,24($fp)
+	b	$L87
+	nop
+
+$L82:
+	lw	$2,60($fp)
+	lw	$2,8($2)
+	sw	$2,32($fp)
+	b	$L87
+	nop
+
+$L83:
+	lw	$2,60($fp)
+	lw	$2,8($2)
+	sw	$2,24($fp)
+	lw	$2,60($fp)
+	lw	$2,16($2)
+	sw	$2,32($fp)
+	b	$L87
+	nop
+
+$L84:
+	lw	$2,60($fp)
 	lw	$2,16($2)
 	sw	$2,24($fp)
 	lw	$2,60($fp)
 	lw	$2,8($2)
 	sw	$2,32($fp)
-	b	$L83
+	b	$L87
 	nop
 
-$L74:
+$L77:
 	lw	$2,%got(stderr)($28)
 	lw	$2,0($2)
 	move	$7,$2
-	li	$6,32			# 0x20
+	li	$6,33			# 0x21
 	li	$5,1			# 0x1
-	lw	$2,%got($LC24)($28)
-	addiu	$4,$2,%lo($LC24)
+	lw	$2,%got($LC25)($28)
+	addiu	$4,$2,%lo($LC25)
 	lw	$2,%call16(fwrite)($28)
 	move	$25,$2
 	.reloc	1f,R_MIPS_JALR,fwrite
@@ -1700,12 +1769,14 @@ $L74:
 
 	lw	$28,16($fp)
 	li	$2,-1			# 0xffffffffffffffff
-	b	$L82
+	b	$L86
 	nop
 
-$L83:
-	lw	$2,%got($LC23)($28)
-	addiu	$5,$2,%lo($LC23)
+$L93:
+	nop
+$L87:
+	lw	$2,%got($LC24)($28)
+	addiu	$5,$2,%lo($LC24)
 	lw	$4,24($fp)
 	lw	$2,%call16(strcmp)($28)
 	move	$25,$2
@@ -1716,8 +1787,8 @@ $L83:
 	lw	$28,16($fp)
 	sltu	$2,$2,1
 	sb	$2,44($fp)
-	lw	$2,%got($LC23)($28)
-	addiu	$5,$2,%lo($LC23)
+	lw	$2,%got($LC24)($28)
+	addiu	$5,$2,%lo($LC24)
 	lw	$4,32($fp)
 	lw	$2,%call16(strcmp)($28)
 	move	$25,$2
@@ -1731,11 +1802,11 @@ $L83:
 	lbu	$2,44($fp)
 	xori	$2,$2,0x1
 	andi	$2,$2,0x00ff
-	beq	$2,$0,$L84
+	beq	$2,$0,$L88
 	nop
 
-	lw	$2,%got($LC25)($28)
-	addiu	$5,$2,%lo($LC25)
+	lw	$2,%got($LC26)($28)
+	addiu	$5,$2,%lo($LC26)
 	lw	$4,24($fp)
 	lw	$2,%call16(fopen)($28)
 	move	$25,$2
@@ -1746,7 +1817,7 @@ $L83:
 	lw	$28,16($fp)
 	sw	$2,28($fp)
 	lw	$2,28($fp)
-	bne	$2,$0,$L84
+	bne	$2,$0,$L88
 	nop
 
 	lw	$2,%got(stderr)($28)
@@ -1754,8 +1825,8 @@ $L83:
 	move	$7,$2
 	li	$6,26			# 0x1a
 	li	$5,1			# 0x1
-	lw	$2,%got($LC26)($28)
-	addiu	$4,$2,%lo($LC26)
+	lw	$2,%got($LC27)($28)
+	addiu	$4,$2,%lo($LC27)
 	lw	$2,%call16(fwrite)($28)
 	move	$25,$2
 	.reloc	1f,R_MIPS_JALR,fwrite
@@ -1764,18 +1835,18 @@ $L83:
 
 	lw	$28,16($fp)
 	li	$2,-1			# 0xffffffffffffffff
-	b	$L82
+	b	$L86
 	nop
 
-$L84:
+$L88:
 	lbu	$2,45($fp)
 	xori	$2,$2,0x1
 	andi	$2,$2,0x00ff
-	beq	$2,$0,$L85
+	beq	$2,$0,$L89
 	nop
 
-	lw	$2,%got($LC27)($28)
-	addiu	$5,$2,%lo($LC27)
+	lw	$2,%got($LC28)($28)
+	addiu	$5,$2,%lo($LC28)
 	lw	$4,32($fp)
 	lw	$2,%call16(fopen)($28)
 	move	$25,$2
@@ -1786,19 +1857,14 @@ $L84:
 	lw	$28,16($fp)
 	sw	$2,36($fp)
 	lw	$2,36($fp)
-	bne	$2,$0,$L85
+	bne	$2,$0,$L89
 	nop
 
-	lw	$2,%got(stderr)($28)
-	lw	$2,0($2)
-	move	$7,$2
-	li	$6,27			# 0x1b
-	li	$5,1			# 0x1
-	lw	$2,%got($LC28)($28)
-	addiu	$4,$2,%lo($LC28)
-	lw	$2,%call16(fwrite)($28)
+	lw	$2,%got($LC29)($28)
+	addiu	$4,$2,%lo($LC29)
+	lw	$2,%call16(perror)($28)
 	move	$25,$2
-	.reloc	1f,R_MIPS_JALR,fwrite
+	.reloc	1f,R_MIPS_JALR,perror
 1:	jalr	$25
 	nop
 
@@ -1806,7 +1872,7 @@ $L84:
 	lbu	$2,44($fp)
 	xori	$2,$2,0x1
 	andi	$2,$2,0x00ff
-	beq	$2,$0,$L86
+	beq	$2,$0,$L90
 	nop
 
 	lw	$4,28($fp)
@@ -1817,12 +1883,12 @@ $L84:
 	nop
 
 	lw	$28,16($fp)
-$L86:
+$L90:
 	li	$2,-1			# 0xffffffffffffffff
-	b	$L82
+	b	$L86
 	nop
 
-$L85:
+$L89:
 	lw	$5,36($fp)
 	lw	$4,28($fp)
 	lw	$2,%got(sort)($28)
@@ -1835,7 +1901,7 @@ $L85:
 	lbu	$2,44($fp)
 	xori	$2,$2,0x1
 	andi	$2,$2,0x00ff
-	beq	$2,$0,$L87
+	beq	$2,$0,$L91
 	nop
 
 	lw	$4,28($fp)
@@ -1846,11 +1912,11 @@ $L85:
 	nop
 
 	lw	$28,16($fp)
-$L87:
+$L91:
 	lbu	$2,45($fp)
 	xori	$2,$2,0x1
 	andi	$2,$2,0x00ff
-	beq	$2,$0,$L88
+	beq	$2,$0,$L92
 	nop
 
 	lw	$4,36($fp)
@@ -1861,9 +1927,9 @@ $L87:
 	nop
 
 	lw	$28,16($fp)
-$L88:
+$L92:
 	move	$2,$0
-$L82:
+$L86:
 	move	$sp,$fp
 	lw	$31,52($sp)
 	lw	$fp,48($sp)
