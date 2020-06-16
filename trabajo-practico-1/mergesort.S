@@ -2,6 +2,14 @@
 #include "mergesortrec.S"
 #include "mymalloc.S"
 
+#define MS_A1_OFF 44
+#define MS_A0_OFF 40
+#define MS_STACK_SZ 40
+#define MS_FP_OFF 32
+#define MS_RA_OFF 28
+#define MS_GP_OFF 24
+#define MS_LTA_OFF 16
+
 .data
 err_msg: .asciiz "Mymalloc error\n"
 
@@ -27,7 +35,7 @@ merge_sort:
                         # padding in (36 + sp) | callee stack
     sw ra, 32(sp)       # save ra in (32 + sp) | callee stack
     sw fp, 28(sp)       # save fp in (28 + sp) | callee stack
-    .cprestore 24       # save gp in (24 + sp) | callee stack
+    .cprestore 24       # save gp in (MS_GP_OFF + sp) | callee stack
 
     move fp, sp         # fp = sp
 
@@ -45,24 +53,24 @@ merge_sort:
 
     beqz v0, _exit      # if mymalloc failed then v0=NULL and we call exit syscall
 
-    sw v0, 16(fp)       # aux_array saved in LTA
+    sw v0, MS_LTA_OFF(fp)       # aux_array saved in LTA
 
     lw a0, 40(fp)       # retrieve a0 from ABA - a0 = stack[40 + fp]
     lw a1, 44(fp)       # retrieve a1 from ABA - a1 = stack[44 + fp]
 
     subu t1, a1, 1      # calculate right index (t1 = size - 1)
 
-    move a0, a0         # redundant (a0 = array pointer (P))
+    # a0 = array pointer (P)
     move a1, v0         # a1 = v0 = merge aux array pointer (T)
     move a2, zero       # a2 = left index (L) = 0
     move a3, t1         # a3 = t1 = right index (R) = size - 1
 
     # argument building area (ABA)
-    # reserved 16 bytes for callee
+    # reserved MS_LTA_OFF bytes for callee
 
     jal _merge_sort_rec
 
-    lw a0, 16(fp)       # load aux_array in a0
+    lw a0, MS_LTA_OFF(fp) # load aux_array in a0
     jal myfree          # free memory requested by aux_array
 
 #--------------------RETURN-----------------------#
@@ -84,10 +92,6 @@ _exit:
     li v0, SYS_write    # Syscall write(2, err_msg, strlen(err_msg)
     syscall
 
-    # retreive registers from SRA
-    lw	gp, 24(sp)
-    lw	fp, 28(sp)
-    lw	ra, 32(sp)
     addiu sp, sp, 40    # increment stack pointer
     li  a0, -1          # exit value = -1
     li  v0, 17          # Syscall exit2 = 17

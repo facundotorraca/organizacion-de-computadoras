@@ -15,7 +15,7 @@ _merge_sort_rec:
 
     # fp -> stack begin
     # 40 -> stack size
-    # ra -> retunr addr
+    # ra -> return addr
     .frame fp, 40, ra   # 16 -> SRA | 8 -> LTA | 16 -> ABA
 
     # stack frame creation
@@ -48,32 +48,32 @@ _merge_sort_rec:
     # padding stack[sp + 20]
     sw t0, 16(fp)
 
-    move a0, a0         # redundamt (a0 = array pointer (P))
-    move a1, a1         # redundant (a1 = merge aux array pointer (T))
-    move a2, a2         # redundant (a2 = left index (L))
+    # a0 = array pointer (P)
+    # a1 = merge aux array pointer (T)
+    # a2 = left index (L)
     move a3, t0         # a3 = t0 = right index (R) = m
 
     jal _merge_sort_rec
 
+    lw a3, 52(fp)       # retrieve a3 from (52 + sp) | caller stack (a3 = right index (R))
+    lw a2, 48(fp)       # retrieve a2 from (48 + sp) | caller stack (a2 = left index (L))
+    lw a1, 44(fp)       # retrieve a1 from (44 + sp) | caller stack (a1 = merge aux array pointer (T))
+    lw a0, 40(fp)       # retrieve a0 from (40 + sp) | caller stack (a0 = array pointer (P))
+
     lw t0, 16(fp)       # retrieve m
     addiu t0, t0, 1     # m = m + 1
 
-    lw a3, 52(fp)       # retrive a3
-
-    move a0, a0         # redundamt (a0 = array pointer (P))
-    move a1, a1         # redundant (a1 = merge aux array pointer (T))
+    # a0 = array pointer (P)
+    # a1 = merge aux array pointer (T)
     move a2, t0         # a2 = left index (L) = m + 1
-    move a3, a3         # a3 = right index (R)
+    # a3 = right index (R)
 
     jal _merge_sort_rec
 
-    lw a3, 52(fp)       # retrieve a3 = R
-    lw a2, 48(fp)       # retrieve a2 = L
-
-    move a0, a0         # redundamt (a0 = array pointer (P))
-    move a1, a1         # redundant (a1 = merge aux array pointer (T))
-    move a2, a2         # redundant (a2 = left index (L))
-    move a3, a3         # redundant (a3 = right index (R))
+    lw a3, 52(fp)       # retrieve a3 from (52 + sp) | caller stack (a3 = right index (R))
+    lw a2, 48(fp)       # retrieve a2 from (48 + sp) | caller stack (a2 = left index (L))
+    lw a1, 44(fp)       # retrieve a1 from (44 + sp) | caller stack (a1 = merge aux array pointer (T))
+    lw a0, 40(fp)       # retrieve a0 from (40 + sp) | caller stack (a0 = array pointer (P))
 
     jal merge
 
